@@ -9,11 +9,12 @@ void gameLoop(void)
 {
     game3d_t *game = createGame();
 
-    PlaySound("./assets/background2.wav", NULL, SND_ASYNC | SND_LOOP);
+    PlaySound("./assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
 
     while (!key[KEY_ESC]) {
         clear_bitmap(game->buffer);
 
+        playerHeal(game);
         displaySky(game);
         movePlayer(game);
         raycasting(game);
@@ -26,9 +27,11 @@ void gameLoop(void)
         displayMiniMap(game);
         displayTarget(game);
         displayLife(game);
+        displayScore(game);
         game->oldMouseX = mouse_x;
         game->indexSaveData = 0;
-        
+        pauseMenu(game);
+
         blit(game->buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
     }
     PlaySound(NULL, NULL, SND_ASYNC | SND_LOOP);

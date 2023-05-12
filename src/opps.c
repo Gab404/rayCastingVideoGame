@@ -5,13 +5,11 @@
 
 void animOpps(npc_t *opps, BITMAP ****anim)
 {
-    if (opps->tempoAnim >= 27 && anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] != NULL) {
-        opps->tempoAnim = 0;
-        if ((opps->walking && opps->IndexAnim == 0) || opps->IndexAnim) {
-            opps->indexSprite++;
-            if (opps->IndexAnim == 1 && !opps->attacking)
-                opps->attacking = 1;
-        }
+    if (clock() - opps->tempoAnim >= 200 && anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] != NULL) {
+        opps->tempoAnim = clock();
+        opps->indexSprite++;
+        if (opps->IndexAnim == 1 && !opps->attacking)
+            opps->attacking = 1;
     } else if (anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] == NULL && !opps->dead) {
         // if (opps->dead) { // death
         //     opps->dead = 0;
@@ -26,10 +24,9 @@ void animOpps(npc_t *opps, BITMAP ****anim)
                 opps->tempoAttack = time(NULL);
             }
         }
-        opps->tempoAnim = 0;
+        opps->tempoAnim = clock();
         opps->indexSprite = 0;
-    } else
-        opps->tempoAnim++;
+    }
 }
 
 BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps, int nbOpps)
@@ -39,7 +36,7 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     int w, h;
     int nbWalk, nbAttack, nbDeath;
     int x, y;
-    int life, dps, speed;
+    int life, dps, speed, points;
 
     fscanf(fp, "%s", filepath);
     tmpBitmap = load_bitmap(filepath, NULL);
@@ -75,11 +72,13 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     fscanf(fp, "%d", &life);
     fscanf(fp, "%d", &dps);
     fscanf(fp, "%d", &speed);
+    fscanf(fp, "%d", &points);
 
-    for (int i = (30 / nbOpps) * typeOpps; i < (30 / nbOpps) * (typeOpps + 1); i++) {
+    for (int i = (game->nbNpc / nbOpps) * typeOpps; i < (game->nbNpc / nbOpps) * (typeOpps + 1); i++) {
         game->opps[i].life = life;
         game->opps[i].dps = dps;
         game->opps[i].speed = speed;
+        game->opps[i].points = points;
         game->opps[i].IndexAnim = 0;
         game->opps[i].indexSprite = 0;
         game->opps[i].maxLife = game->opps[i].life;
@@ -107,18 +106,17 @@ void loadOpps(game3d_t *game)
     fscanf(fp, "%d", &nbOpps);
     game->oppsAnim = malloc(sizeof(BITMAP ***) * (nbOpps + 1));
     game->oppsAnim[nbOpps] = NULL;
-    for (int i = 0; i < nbOpps; i++) {
+    for (int i = 0; i < nbOpps; i++)
         game->oppsAnim[i] = loadOneOpps(fp, game, i, game->oppsAnim[i], nbOpps);
-        
-    }
+    
     fclose(fp);
 
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < game->nbNpc; i++) {
         game->badPosX[i] = 0;
         game->badPosY[i] = 0;
     }
 
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < game->nbNpc; i++) {
         generateSpawnCoord(game, &x, &y);
         game->badPosX[i] = x * SIZE + 20;
         game->badPosY[i] = y * SIZE + 20;
@@ -247,6 +245,15 @@ int collideBetweenOpps(game3d_t *game, int x, int y, int index)
     return 0;
 }
 
+int checkCoordCrash(int y, int x, int row, int col)
+{
+    if (y > row || y < 0)
+        return 0;
+    if (x > col || x <  0)
+        return 0;
+    return 1;
+}
+
 void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster, char **map, int index)
 {
     double posX, posY;
@@ -262,7 +269,7 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
     checkX = opps->x + posX;
     checkY = opps->y + posY;
 
-    if (map[(int)(checkY + posY * 3) / 64][(int)(checkX + posX * 3) / 64] == '*' && opps->nbStep == opps->maxStep && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && opps->IndexAnim != 2 && (opps->playerSeen || opps->agro)) {
+    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && opps->nbStep == opps->maxStep && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) {
         if ((checkX >= player->screenX + 30 || checkX <= player->screenX - 30) && (checkY >= player->screenY + 30 || checkY <= player->screenY - 30)) {
             opps->x += round(posX);
             opps->y += round(posY);
@@ -319,9 +326,14 @@ void calcSprite(game3d_t *game, int index)
             game->opps[index].life -= game->player->guns[game->player->indexGun]->dps;
             game->player->shooting = 0;
             if (game->opps[index].life <= 0) { // si le bot meurt
+                game->player->score += game->opps[index].points;
                 game->opps[index].IndexAnim = 2;
                 game->opps[index].dead = 1;
                 game->opps[index].life = 0;
+                game->opps[index].playerSeen = 0;
+                game->opps[index].attacking = 0;
+                game->opps[index].agro = 0;
+                game->opps[index].walking = 0;
             }
         }
 

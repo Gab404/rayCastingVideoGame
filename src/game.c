@@ -24,8 +24,10 @@ BITMAP **loadTexture(char *filepath)
 
 int isBadPos(game3d_t *game, int x ,int y)
 {
+    if (x < 9 && y < 5)
+        return 1;
     for (int i = 0; i < game->nbNpc; i++) {
-        if (game->badPosX[i] == x * SIZE + 20 && game->badPosY[i] == y * SIZE + 20)
+        if ((game->badPosX[i] - 20) / 64 == x && (game->badPosY[i] - 20) / 64 == y)
             return 1;
     }
     return 0;
@@ -51,6 +53,7 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
+    game->nbNpc = 32;
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
     game->skyX2 = SCREEN_W + 10;
@@ -60,18 +63,19 @@ game3d_t *createGame(void)
     game->texture = loadTexture("./assets/texture.bmp");
     game->player = createPlayer();
     game->munLogo = load_bitmap("./assets/munLogo.bmp", NULL);
+    game->pauseBanner = load_bitmap("./assets/pause.bmp", NULL);
     loadOpps(game);
 
     checkPtrNull(game->munLogo, "Exit Failure: loading munition logo bitmap failed\n");
     checkPtrNull(game->texture, "Exit Failure: creation texture failed\n");
     checkPtrNull(game->sky, "Exit Failure: creation sky failed\n");
     checkPtrNull(game->buffer, "Exit Failure: creation buffer failed\n");
+    checkPtrNull(game->pauseBanner, "Exit Failure: load pause bitmap failed");
 
     game->indexSaveData = 0;
     game->midScreenW = SCREEN_W / 2;
     game->midScreenH = SCREEN_H / 2;
-    game->volume = 200;
-    game->nbNpc = 30;
+    game->volume = 50;
     
     return game;
 }

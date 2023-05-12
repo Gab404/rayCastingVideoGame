@@ -41,7 +41,6 @@ float rayCast(game3d_t *game, float angle, int *posTexture, char *typeWall)
     int ox = game->player->screenX;
     int oy = game->player->screenY;
     float depth_hor;
-    float max_depth = 50;
     int texture_hor = 1, texture_vert = 1;
 
     float sin_a = -sin(angle);
@@ -127,7 +126,7 @@ void raycasting(game3d_t *game)
 {
     float distWall = 0;
     int heightWall;
-    int j = 0;
+    int j = -1;
 
     // displayMapDebug(game->map, game->buffer);
     // circlefill(game->buffer, game->player->screenX, game->player->screenY, 5, makecol(0, 255, 0));
@@ -138,7 +137,8 @@ void raycasting(game3d_t *game)
     // }
 
     getPosCase(game->player);
-    for (float i = game->player->angle + ((0.0175 * 60) / 2.00); i > game->player->angle - ((0.0175 * 60) / 2.00); i -= 0.004375, j += 1) {
+    for (float i = game->player->angle + ((0.0175 * 60) / 2.00); i > game->player->angle - ((0.0175 * 60) / 2.00); i -= 0.004375) {
+        j++;
         game->allDist[j] = rayCast(game, i, &game->allPosTexture[j], &game->allTypeWall[j]);
         game->allPos[j] = j;
     }

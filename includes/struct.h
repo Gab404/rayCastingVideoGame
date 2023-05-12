@@ -38,10 +38,14 @@ typedef struct player_s {
     float posyCase;
     int screenDist;
     int shooting;
+    time_t timeHeal;
+    time_t timeAttackedHeal;
+    int score;
 } player_t;
 
 typedef struct npc_s {
     int life;
+    int points;
     time_t tempoAttack;
     int maxStep;
     int nbStep;
@@ -70,17 +74,18 @@ typedef struct game3d_s {
     int indexSaveData;
     BITMAP *buffer;
     BITMAP *sky;
+    BITMAP *pauseBanner;
     BITMAP **texture;
     BITMAP ****oppsAnim;
     BITMAP *munLogo;
     player_t *player;
-    npc_t opps[30];
-    int allDist[269];
-    int allPosTexture[269];
-    char allTypeWall[269];
-    int allPos[269];
-    int badPosX[30];
-    int badPosY[30];
+    npc_t opps[56];
+    int allDist[374];
+    int allPosTexture[374];
+    char allTypeWall[374];
+    int allPos[374];
+    int badPosX[56];
+    int badPosY[56];
     char **map;
     int skyX;
     int skyX2;

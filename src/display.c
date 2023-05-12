@@ -1,6 +1,36 @@
 #include <allegro.h>
 #include <math.h>
+#include <stdio.h>
 #include "header.h"
+
+void displayScore(game3d_t *game)
+{
+    char score[10];
+
+    sprintf(score, "%d", game->player->score);
+    textout_ex(game->buffer, font, "Score:", SCREEN_W - 110, 50, makecol(255, 255, 255), -1);
+    textout_ex(game->buffer, font, score, SCREEN_W - 50, 50, makecol(255, 255, 255), -1);
+}
+
+void displayLife(game3d_t *game)
+{
+    char life[10];
+
+    for (int i = 0; i < game->nbNpc; i++) {
+        if (game->opps[i].attacking == 1) {
+            game->player->life -= game->opps[i].dps;
+            game->opps[i].attacking = 2;
+            game->player->timeAttackedHeal = time(NULL);
+        }
+    }
+    if (game->player->life < 0)
+        game->player->life = 0;
+    sprintf(life, "%d", game->player->life);
+    rectfill(game->buffer, 12, SCREEN_H - 23, 217, SCREEN_H - 7, makecol(0, 0, 0));
+    rectfill(game->buffer, 15, SCREEN_H - 20, 15 + game->player->life * 2, SCREEN_H - 10, makecol(255, 0, 0));
+    textout_ex(game->buffer, font, life, 18, SCREEN_H - 18, makecol(255, 255, 255), -1);
+    textout_ex(game->buffer, font, "%", 43, SCREEN_H - 18, makecol(255, 255, 255), -1);
+}
 
 void displayTarget(game3d_t *game)
 {
@@ -51,19 +81,18 @@ void display3D(game3d_t *game)
     BITMAP *tmpSprite;
 
     quickSort(game->allDist, game->allPosTexture, game->allTypeWall, game->allPos, 0, game->indexSaveData - 1);
-
+   
     for (int i = 0; i < game->indexSaveData; i++) {
-        if (game->allPosTexture[i] < 0) { // display sprite
-            
+        if (game->allPosTexture[i] < 0 && game->allDist[i] < 800) { // display sprite
             tmpOpps = (game->allPosTexture[i] + 1) * -1;
             indexOpps = (int)game->allTypeWall[i];
             tmpSprite = game->oppsAnim[tmpOpps][game->opps[indexOpps].IndexAnim][game->opps[indexOpps].indexSprite];
             projWidth = (20000 / game->allDist[i]); // => projWidth / 2
             projHeight = 40000 / game->allDist[i];
             if (game->opps[indexOpps].life != 0)
-                rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
-            stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
-        } else { // display wall
+                rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + game->allDist[i] / 15, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife  + game->allDist[i] / 15, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
+            stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth + game->allDist[i] / 15, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
+        } else if (game->allPosTexture[i] >= 0) { // display wall
             distWall = game->allDist[i] * cos((initAngle - game->allPos[i] * 0.004375) - game->player->angle); // enlever l'aspect de fish-eye
             heightWall = round(40000.00 / distWall);
             stretch_blit(game->texture[game->allTypeWall[i] - 'a'], game->buffer, game->allPosTexture[i], 0, 1, 64, game->allPos[i] * 4, game->midScreenH - heightWall / 2, 4, heightWall);

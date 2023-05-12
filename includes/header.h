@@ -6,6 +6,8 @@
 #define PI 3.14159265358979323846
 #define SIZE 64
 
+void pauseMenu(game3d_t *game);
+
 void generateSpawnCoord(game3d_t *game, int *x, int *y);
 
 void animOpps(npc_t *opps, BITMAP ****anim);
@@ -16,6 +18,8 @@ void displayTarget(game3d_t *game);
 void displayMiniMap(game3d_t *game);
 void displaySky(game3d_t *game);
 void display3D(game3d_t *game);
+void displayLife(game3d_t *game);
+void displayScore(game3d_t *game);
 
 game3d_t *createGame(void);
 
@@ -26,7 +30,7 @@ void displayGun(game3d_t *game);
 
 void movePlayer(game3d_t *game);
 player_t *createPlayer(void);
-void displayLife(game3d_t *game);
+void playerHeal(game3d_t *game);
 
 void raycasting(game3d_t *game);
 
