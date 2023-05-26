@@ -1,7 +1,5 @@
 <div id="top"></div>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
@@ -73,7 +71,7 @@ Use the `Makefile` to get started on Linux.
 
 Use the 
 
-`CMakeLists.txt` 
+`CMakeLists.txt` (and put exe file to root)
 
 or 
 
@@ -136,11 +134,6 @@ Project Link: [https://github.com/gab_gdp/rayCastingVideoGame](https://github.co
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/Gab404/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/Gab404/runner/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/Gab404/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/Gab404/runner/network/members
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/gabriel-guiet-dupre
 [schema-network]: ./assets/gameplay.png
 [loss-function]: ./assets/raycastingDisplay.PNG
