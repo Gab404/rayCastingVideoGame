@@ -3,17 +3,6 @@
 #include <math.h>
 #include "header.h"
 
-void displayMapDebug(char **map, BITMAP *buffer)
-{
-    for (int i = 0; map[i] != NULL; i++)
-        for (int j = 0; map[i][j] != '\0'; j++) {
-            if (map[i][j] == '*')
-                rectfill(buffer, j * 64, i * 64, j * 64 + 252, i * 64 + 252, makecol(255, 255, 255));
-            else if (map[i][j] != '*')
-                rectfill(buffer, j * 64, i * 64, j * 64 + 252, i * 64 + 252, makecol(0, 0, 255));
-        }
-}
-
 void resetAngle(float *angle)
 {
     if (*angle > (2 * PI))
@@ -127,14 +116,6 @@ void raycasting(game3d_t *game)
     float distWall = 0;
     int heightWall;
     int j = -1;
-
-    // displayMapDebug(game->map, game->buffer);
-    // circlefill(game->buffer, game->player->screenX, game->player->screenY, 5, makecol(0, 255, 0));
-    // for (int i = 0; i < game->nbNpc; i++) {
-    //     circlefill(game->buffer, game->opps[i].x, game->opps[i].y, 5, makecol(255, 0, 0));
-    //     if (game->opps[i].playerSeen)
-    //         line(game->buffer, game->player->screenX, game->player->screenY, game->opps[i].x, game->opps[i].y, makecol(0, 0, 0));
-    // }
 
     getPosCase(game->player);
     for (float i = game->player->angle + ((0.0175 * 60) / 2.00); i > game->player->angle - ((0.0175 * 60) / 2.00); i -= 0.004375) {
