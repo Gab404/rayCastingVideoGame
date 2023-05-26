@@ -143,5 +143,5 @@ Project Link: [https://github.com/gab_gdp/rayCastingVideoGame](https://github.co
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/gabriel-guiet-dupre
 [schema-network]: ./assets/gameplay.png
-[loss-function]: ./assets/raycastingDisplay.png
+[loss-function]: ./assets/raycastingDisplay.PNG
 [less-texture]: ./assets/lessTexture.png
