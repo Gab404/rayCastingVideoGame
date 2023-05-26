@@ -6,6 +6,8 @@
 #define PI 3.14159265358979323846
 #define SIZE 64
 
+int getNumNpc(void);
+
 void pauseMenu(game3d_t *game);
 
 void generateSpawnCoord(game3d_t *game, int *x, int *y);
@@ -22,8 +24,9 @@ void displayLife(game3d_t *game);
 void displayScore(game3d_t *game);
 
 game3d_t *createGame(void);
+void gameLoop(void);
 
-void quickSort(int arr[], int label1[], char label2[], int label3[], int left, int right);
+void quickSort(int arr[], int label1[], int label2[], int label3[], int left, int right);
 
 gun_t **loadGuns(gun_t **guns);
 void displayGun(game3d_t *game);

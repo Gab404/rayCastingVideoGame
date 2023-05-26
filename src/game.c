@@ -1,7 +1,40 @@
 #include <allegro.h>
+#include <winalleg.h>
 #include "header.h"
 
-#include <stdio.h>
+void gameLoop(void)
+{
+    game3d_t *game = createGame();
+
+    PlaySound("./assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
+
+    while (!key[KEY_ESC]) {
+        clear_bitmap(game->buffer);
+
+        playerHeal(game);
+        displaySky(game);
+        movePlayer(game);
+        raycasting(game);
+        for (int i = 0; i < game->nbNpc; i++) {
+            calcSprite(game, i);
+            animOpps(&game->opps[i], game->oppsAnim);
+        }
+
+        display3D(game);
+        displayGun(game);
+        displayMiniMap(game);
+        displayTarget(game);
+        displayLife(game);
+        displayScore(game);
+        game->oldMouseX = mouse_x;
+        game->indexSaveData = 0;
+        pauseMenu(game);
+
+        blit(game->buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+    }
+    PlaySound(NULL, NULL, SND_ASYNC | SND_LOOP);
+    freeGame(game);
+}
 
 BITMAP **loadTexture(char *filepath)
 {
@@ -53,7 +86,8 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
-    game->nbNpc = 32;
+    game->nbNpc = getNumNpc();
+    clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
     game->skyX2 = SCREEN_W + 10;

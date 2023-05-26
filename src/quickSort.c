@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-void quickSort(int arr[], int label1[], char label2[], int label3[], int left, int right)
+void quickSort(int arr[], int label1[], int label2[], int label3[], int left, int right)
 {
     int i = left, j = right;
     int temp, pivot = arr[(left + right) / 2];
     int tmpLabel1;
-    char tmpLabel2;
+    int tmpLabel2;
     int tmpLabel3;
  
     while (i <= j) {

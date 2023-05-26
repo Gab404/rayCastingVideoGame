@@ -11,12 +11,6 @@ void animOpps(npc_t *opps, BITMAP ****anim)
         if (opps->IndexAnim == 1 && !opps->attacking)
             opps->attacking = 1;
     } else if (anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] == NULL && !opps->dead) {
-        // if (opps->dead) { // death
-        //     opps->dead = 0;
-        //     opps->life = opps->maxLife;
-        //     opps->IndexAnim = 0;
-        //     opps->attacking = 0;
-        /*} else*/ 
         if (opps->IndexAnim == 1) {
             if (anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] == NULL) {
                 opps->IndexAnim = 0;
@@ -37,7 +31,6 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     int nbWalk, nbAttack, nbDeath;
     int x, y;
     int life, dps, speed, points;
-
     fscanf(fp, "%s", filepath);
     tmpBitmap = load_bitmap(filepath, NULL);
     fscanf(fp, "%d", &w);
@@ -51,7 +44,6 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     checkPtrNull(animOpps, "Exit Failure: malloc failed\n");
     animOpps[3] = NULL;
     int arr[] = {nbWalk, nbAttack, nbDeath};
-
     for (int i = 0; i < 3; i++) {
         animOpps[i] = malloc(sizeof(BITMAP *) * (arr[i] + 1));
         checkPtrNull(animOpps[i], "Exit Failure: malloc failed\n");
@@ -68,7 +60,6 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
             }
         }
     }
-
     fscanf(fp, "%d", &life);
     fscanf(fp, "%d", &dps);
     fscanf(fp, "%d", &speed);
@@ -84,15 +75,13 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
         game->opps[i].maxLife = game->opps[i].life;
         game->opps[i].dead = 0;
         game->opps[i].attacking = 0;
-        game->opps[i].maxStep = 3;
-        game->opps[i].nbStep = 0;
         game->opps[i].tempoAttack = time(NULL);
         game->opps[i].walking = 0;
         game->opps[i].playerSeen = 0;
         game->opps[i].agro = 0;
         game->opps[i].typeSprite = typeOpps;
+        game->opps[i].clockStep = clock();
     }
-
     return animOpps;
 }
 
@@ -106,11 +95,27 @@ void loadOpps(game3d_t *game)
     fscanf(fp, "%d", &nbOpps);
     game->oppsAnim = malloc(sizeof(BITMAP ***) * (nbOpps + 1));
     game->oppsAnim[nbOpps] = NULL;
+
+    game->opps = malloc(sizeof(npc_t) * game->nbNpc);
+    checkPtrNull(game->opps, "Exit Failure: malloc failed");
     for (int i = 0; i < nbOpps; i++)
         game->oppsAnim[i] = loadOneOpps(fp, game, i, game->oppsAnim[i], nbOpps);
     
     fclose(fp);
 
+    game->allPosTexture = malloc(sizeof(int) * (242 + game->nbNpc));
+    game->allDist = malloc(sizeof(int) * (242 + game->nbNpc));
+    game->allPos = malloc(sizeof(int) * (242 + game->nbNpc));
+    game->allTypeWall = malloc(sizeof(int) * (242 + game->nbNpc));
+    checkPtrNull(game->allDist, "Exit Failure: malloc failed");
+    checkPtrNull(game->allPos, "Exit Failure: malloc failed");
+    checkPtrNull(game->allPosTexture, "Exit Failure: malloc failed");
+    checkPtrNull(game->allTypeWall, "Exit Failure: malloc failed");
+
+    game->badPosX = malloc(sizeof(int) * game->nbNpc);
+    game->badPosY = malloc(sizeof(int) * game->nbNpc);
+    checkPtrNull(game->badPosX, "Exit Failure: malloc failed");
+    checkPtrNull(game->badPosY, "Exit Failure: malloc failed");
     for (int i = 0; i < game->nbNpc; i++) {
         game->badPosX[i] = 0;
         game->badPosY[i] = 0;
@@ -269,7 +274,7 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
     checkX = opps->x + posX;
     checkY = opps->y + posY;
 
-    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && opps->nbStep == opps->maxStep && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) {
+    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && clock() - opps->clockStep >= 35 && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) {
         if ((checkX >= player->screenX + 30 || checkX <= player->screenX - 30) && (checkY >= player->screenY + 30 || checkY <= player->screenY - 30)) {
             opps->x += round(posX);
             opps->y += round(posY);
@@ -284,9 +289,8 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
             opps->IndexAnim = 1;
             opps->walking = 0;
         }
-        opps->nbStep = 0;
-    } else if (opps->nbStep < opps->maxStep)
-        opps->nbStep++;
+        opps->clockStep = clock();
+    }
 }
 
 void calcSprite(game3d_t *game, int index)
@@ -300,10 +304,9 @@ void calcSprite(game3d_t *game, int index)
     int nbVec, dist;
     int projWidth, projHeight;
     BITMAP *sprite = game->oppsAnim[game->opps[index].typeSprite][game->opps[index].IndexAnim][game->opps[index].indexSprite];
-    
+
     game->opps[index].playerSeen = playerIsSeen(game, angleMonster, index);
     moveOpps(game, &game->opps[index], game->player, angleMonster, game->map, index);
-
     if (game->opps[index].x < game->player->screenX)
         angleMonster = PI + angleMonster;
     if (angleMonster < 0)
@@ -325,7 +328,7 @@ void calcSprite(game3d_t *game, int index)
         if (((alpha <= 0.1 && alpha >= 0) || (alpha >= -0.1 && alpha <= 0)) && game->player->shooting && game->opps[index].playerSeen && !game->opps[index].dead) { // si le joueur shoot sur l'ennemie
             game->opps[index].life -= game->player->guns[game->player->indexGun]->dps;
             game->player->shooting = 0;
-            if (game->opps[index].life <= 0) { // si le bot meurt
+            if (game->opps[index].life <= 0) { // npc die
                 game->player->score += game->opps[index].points;
                 game->opps[index].IndexAnim = 2;
                 game->opps[index].dead = 1;

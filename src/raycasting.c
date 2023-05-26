@@ -30,7 +30,7 @@ void getPosCase(player_t *player)
     player->posyCase = 63 - (player->screenY - (player->screenY) / 64 * 64);
 }
 
-float rayCast(game3d_t *game, float angle, int *posTexture, char *typeWall)
+float rayCast(game3d_t *game, float angle, int *posTexture, int *typeWall)
 {
     float x_vert, y_vert;
     float y_hor, x_hor;
@@ -113,11 +113,11 @@ float rayCast(game3d_t *game, float angle, int *posTexture, char *typeWall)
 
     if (depth_vert < depth_hor) { // choice the shortest vector
         *posTexture = 64 - ((int)(y_vert) - (tile_vert_y * 64));
-        *typeWall = game->map[tile_vert_y][tile_vert_x];
+        *typeWall = (int)game->map[tile_vert_y][tile_vert_x];
         return depth_vert;
     } else {
         *posTexture = (int)(x_hor) - (tile_hor_x * 64);
-        *typeWall = game->map[tile_hor_y][tile_hor_x];
+        *typeWall = (int)game->map[tile_hor_y][tile_hor_x];
         return depth_hor;
     }
 }

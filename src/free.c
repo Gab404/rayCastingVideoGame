@@ -49,5 +49,12 @@ void freeGame(game3d_t *game)
     freePlayer(game->player);
     freeOppsSprite(game);
     free(game->texture);
+    free(game->allDist);
+    free(game->allPos);
+    free(game->allPosTexture);
+    free(game->allTypeWall);
+    free(game->opps);
+    free(game->badPosX);
+    free(game->badPosY);
     free(game);
 }

@@ -81,11 +81,10 @@ void display3D(game3d_t *game)
     BITMAP *tmpSprite;
 
     quickSort(game->allDist, game->allPosTexture, game->allTypeWall, game->allPos, 0, game->indexSaveData - 1);
-   
     for (int i = 0; i < game->indexSaveData; i++) {
         if (game->allPosTexture[i] < 0 && game->allDist[i] < 800) { // display sprite
             tmpOpps = (game->allPosTexture[i] + 1) * -1;
-            indexOpps = (int)game->allTypeWall[i];
+            indexOpps = game->allTypeWall[i];
             tmpSprite = game->oppsAnim[tmpOpps][game->opps[indexOpps].IndexAnim][game->opps[indexOpps].indexSprite];
             projWidth = (20000 / game->allDist[i]); // => projWidth / 2
             projHeight = 40000 / game->allDist[i];
@@ -93,9 +92,10 @@ void display3D(game3d_t *game)
                 rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + game->allDist[i] / 15, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife  + game->allDist[i] / 15, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
             stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth + game->allDist[i] / 15, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
         } else if (game->allPosTexture[i] >= 0) { // display wall
+            
             distWall = game->allDist[i] * cos((initAngle - game->allPos[i] * 0.004375) - game->player->angle); // enlever l'aspect de fish-eye
             heightWall = round(40000.00 / distWall);
-            stretch_blit(game->texture[game->allTypeWall[i] - 'a'], game->buffer, game->allPosTexture[i], 0, 1, 64, game->allPos[i] * 4, game->midScreenH - heightWall / 2, 4, heightWall);
+            stretch_blit(game->texture[(char)game->allTypeWall[i] - 'a'], game->buffer, game->allPosTexture[i], 0, 1, 64, game->allPos[i] * 4, game->midScreenH - heightWall / 2, 4, heightWall);
             rectfill(game->buffer, game->allPos[i] * 4, game->midScreenH + heightWall / 2, game->allPos[i] * 4 + 4, game->midScreenH + heightWall + 300, makecol(30, 30, 30));
         }
     }
