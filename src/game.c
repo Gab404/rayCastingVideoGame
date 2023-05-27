@@ -19,7 +19,7 @@ int winOrLose(game3d_t *game)
         sprintf(tmpString, "%d", game->player->score);
         textout_ex(screen, font, "Score :", 380, 500, makecol(255, 255, 255), -1);
         textout_ex(screen, font, tmpString, 430, 500, makecol(255, 255, 255), -1);
-        textout_ex(screen, font, "Vous avez survécue !", 350, 250, makecol(255, 255, 255), -1);
+        textout_ex(screen, font, "You win !", 350, 250, makecol(255, 255, 255), -1);
         rest(2000);
         return 1;
     } else if (game->player->life == 0) { // lose party
@@ -28,7 +28,7 @@ int winOrLose(game3d_t *game)
         sprintf(tmpString, "%d", game->player->score);
         textout_ex(screen, font, "Score :", 380, 500, makecol(255, 255, 255), -1);
         textout_ex(screen, font, tmpString, 430, 500, makecol(255, 255, 255), -1);
-        textout_ex(screen, font, "Vous êtes mort !", 350, 250, makecol(255, 255, 255), -1);
+        textout_ex(screen, font, "You lose !", 350, 250, makecol(255, 255, 255), -1);
         rest(2000);
         return 1;
     }

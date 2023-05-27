@@ -84,11 +84,32 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     return animOpps;
 }
 
+void loadStillOpps(game3d_t *game, int i, int index)
+{
+    game->opps[i].life = game->opps[index].life;
+    game->opps[i].dps = game->opps[index].dps;
+    game->opps[i].speed = game->opps[index].speed;
+    game->opps[i].points = game->opps[index].points;
+    game->opps[i].IndexAnim = 0;
+    game->opps[i].indexSprite = 0;
+    game->opps[i].maxLife = game->opps[index].life;
+    game->opps[i].dead = 0;
+    game->opps[i].attacking = 0;
+    game->opps[i].tempoAttack = time(NULL);
+    game->opps[i].walking = 0;
+    game->opps[i].playerSeen = 0;
+    game->opps[i].agro = 0;
+    game->opps[i].typeSprite = game->opps[index].typeSprite;
+    game->opps[i].clockStep = clock();
+    game->opps[i].tempoAnim = clock();
+}
+
 void loadOpps(game3d_t *game)
 {
     FILE *fp = fopen("./conf/opps.conf", "r");
     int nbOpps;
     int x, y;
+    int index;
 
     checkPtrNull(fp, "Exit Failure: ./conf/opps.conf opening failed\n");
     fscanf(fp, "%d", &nbOpps);
@@ -97,8 +118,12 @@ void loadOpps(game3d_t *game)
 
     game->opps = malloc(sizeof(npc_t) * game->nbNpc);
     checkPtrNull(game->opps, "Exit Failure: malloc failed");
-    for (int i = 0; i < nbOpps; i++)
-        game->oppsAnim[i] = loadOneOpps(fp, game, i, game->oppsAnim[i], nbOpps);
+    for (index = 0; index < nbOpps; index++)
+        game->oppsAnim[index] = loadOneOpps(fp, game, index, game->oppsAnim[index], nbOpps);
+
+    if (game->nbNpc % nbOpps != 0)
+        for (int i = index; i - index < game->nbNpc % nbOpps; i++)
+            loadStillOpps(game, i, index - 1);
     
     fclose(fp);
 
