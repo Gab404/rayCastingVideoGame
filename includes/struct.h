@@ -54,7 +54,7 @@ typedef struct npc_s {
     int attacking;
     int walking;
     int indexSprite;
-    int tempoAnim;
+    clock_t tempoAnim;
     int IndexAnim;
     int typeSprite;
     int x;

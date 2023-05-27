@@ -39,25 +39,25 @@ void movePlayer(game3d_t *game)
         game->skyX2 += 15;
     }
 
-    if ((key[KEY_UP] || key[KEY_W]) && !isCollision(game->player->screenX + round(cos(game->player->angle)) * 10, game->player->screenY - round(sin(game->player->angle)) * 10, game->map) && game->player->clockStep >= 35) {
+    if ((key[KEY_UP] || key[KEY_W]) && !isCollision(game->player->screenX + round(cos(game->player->angle)) * 10, game->player->screenY - round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 5) {
         game->player->screenX += round(cos(game->player->angle)) * 2;
         game->player->screenY -= round(sin(game->player->angle)) * 2;
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
         moved = 1;
     }
-    if ((key[KEY_DOWN] || key[KEY_S]) && !isCollision(game->player->screenX - round(cos(game->player->angle)) * 10, game->player->screenY + round(sin(game->player->angle)) * 10, game->map) && game->player->clockStep >= 35) {
+    if ((key[KEY_DOWN] || key[KEY_S]) && !isCollision(game->player->screenX - round(cos(game->player->angle)) * 10, game->player->screenY + round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 5) {
         game->player->screenX -= round(cos(game->player->angle)) * 2;
         game->player->screenY += round(sin(game->player->angle)) * 2;
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
         moved = 1;
     }
-    if ((key[KEY_RIGHT] || key[KEY_D]) && !isCollision(game->player->screenX + round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY - round(sin(game->player->angle - (PI / 2))) * 10, game->map) && game->player->clockStep >= 35) {
+    if ((key[KEY_RIGHT] || key[KEY_D]) && !isCollision(game->player->screenX + round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY - round(sin(game->player->angle - (PI / 2))) * 10, game->map) && clock() - game->player->clockStep >= 5) {
         game->player->screenX += round(cos(game->player->angle - (PI / 2)));
         game->player->screenY -= round(sin(game->player->angle - (PI / 2)));
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
         moved = 1;
     }
-    if ((key[KEY_LEFT] || key[KEY_A]) && !isCollision(game->player->screenX - round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY + round(sin(game->player->angle - (PI / 2))) * 10, game->map) && game->player->clockStep >= 35) {
+    if ((key[KEY_LEFT] || key[KEY_A]) && !isCollision(game->player->screenX - round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY + round(sin(game->player->angle - (PI / 2))) * 10, game->map) && clock() - game->player->clockStep >= 5) {
         game->player->screenX -= round(cos(game->player->angle - (PI / 2)));
         game->player->screenY += round(sin(game->player->angle - (PI / 2)));
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;

@@ -11,6 +11,7 @@ SRC =   ./src/main.c \
         ./src/player.c \
         ./src/quickSort.c \
         ./src/raycasting.c \
+        ./src/loadTexture.c \
 
 OBJ    =    $(SRC:.c=.o)
 

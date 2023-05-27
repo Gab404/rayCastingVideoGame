@@ -15,6 +15,7 @@ void gameLoop(void)
         displaySky(game);
         movePlayer(game);
         raycasting(game);
+
         for (int i = 0; i < game->nbNpc; i++) {
             calcSprite(game, i);
             animOpps(&game->opps[i], game->oppsAnim);
@@ -34,51 +35,6 @@ void gameLoop(void)
     }
     PlaySound(NULL, NULL, SND_ASYNC | SND_LOOP);
     freeGame(game);
-}
-
-BITMAP **loadTexture(char *filepath)
-{
-    BITMAP *tmpTexture = load_bitmap(filepath, NULL);
-    BITMAP **texture;
-    int nbTexture;
-
-    checkPtrNull(tmpTexture, "Exit Failure: error at texture creation\n");
-    nbTexture = tmpTexture->h / 64;
-    texture = malloc(sizeof(BITMAP *) * (nbTexture + 1));
-
-    for (int i = 0; i < nbTexture; i++) {
-        texture[i] = create_bitmap(64, 64);
-        stretch_blit(tmpTexture, texture[i], 0, i * 64, 64, 64, 0, 0, 64, 64);
-    }
-    texture[nbTexture] = NULL;
-
-    return texture;
-}
-
-int isBadPos(game3d_t *game, int x ,int y)
-{
-    if (x < 9 && y < 5)
-        return 1;
-    for (int i = 0; i < game->nbNpc; i++) {
-        if ((game->badPosX[i] - 20) / 64 == x && (game->badPosY[i] - 20) / 64 == y)
-            return 1;
-    }
-    return 0;
-}
-
-void generateSpawnCoord(game3d_t *game, int *x, int *y)
-{
-    int col = 0, row = 0;
-
-    while (game->map[row] != NULL)
-        row++;
-    while(game->map[0][col] != '\0')
-        col++;
-
-    do {
-        *x = rand() % ((col - 1) - 1) + 1;
-        *y = rand() % ((row - 1) - 1) + 1;
-    } while (game->map[*y][*x] != '*' || isBadPos(game, *x, *y));
 }
 
 game3d_t *createGame(void)

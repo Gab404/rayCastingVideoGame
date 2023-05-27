@@ -6,6 +6,8 @@
 #define PI 3.14159265358979323846
 #define SIZE 64
 
+BITMAP **loadTexture(char *filepath);
+
 int getNumNpc(void);
 
 void pauseMenu(game3d_t *game);

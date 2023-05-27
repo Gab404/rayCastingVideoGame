@@ -5,18 +5,16 @@
 
 void animOpps(npc_t *opps, BITMAP ****anim)
 {
-    if (clock() - opps->tempoAnim >= 200 && anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] != NULL) {
+    if (clock() - opps->tempoAnim >= 180 && anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] != NULL) {
         opps->tempoAnim = clock();
         opps->indexSprite++;
         if (opps->IndexAnim == 1 && !opps->attacking)
             opps->attacking = 1;
     } else if (anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] == NULL && !opps->dead) {
         if (opps->IndexAnim == 1) {
-            if (anim[opps->typeSprite][opps->IndexAnim][opps->indexSprite + 1] == NULL) {
-                opps->IndexAnim = 0;
-                opps->attacking = 0;
-                opps->tempoAttack = time(NULL);
-            }
+            opps->IndexAnim = 0;
+            opps->attacking = 0;
+            opps->tempoAttack = time(NULL);
         }
         opps->tempoAnim = clock();
         opps->indexSprite = 0;
@@ -81,6 +79,7 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
         game->opps[i].agro = 0;
         game->opps[i].typeSprite = typeOpps;
         game->opps[i].clockStep = clock();
+        game->opps[i].tempoAnim = clock();
     }
     return animOpps;
 }
@@ -248,6 +247,32 @@ int collideBetweenOpps(game3d_t *game, int x, int y, int index)
             return 1;
     }
     return 0;
+}
+
+int isBadPos(game3d_t *game, int x ,int y)
+{
+    if (x < 9 && y < 5)
+        return 1;
+    for (int i = 0; i < game->nbNpc; i++) {
+        if ((game->badPosX[i] - 20) / 64 == x && (game->badPosY[i] - 20) / 64 == y)
+            return 1;
+    }
+    return 0;
+}
+
+void generateSpawnCoord(game3d_t *game, int *x, int *y)
+{
+    int col = 0, row = 0;
+
+    while (game->map[row] != NULL)
+        row++;
+    while(game->map[0][col] != '\0')
+        col++;
+
+    do {
+        *x = rand() % ((col - 1) - 1) + 1;
+        *y = rand() % ((row - 1) - 1) + 1;
+    } while (game->map[*y][*x] != '*' || isBadPos(game, *x, *y));
 }
 
 int checkCoordCrash(int y, int x, int row, int col)
