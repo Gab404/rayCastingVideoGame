@@ -52,6 +52,7 @@ void displayMiniMap(game3d_t *game)
         if (game->opps[i].IndexAnim != 2)
             circlefill(game->buffer, game->opps[i].x / 64 * 7 + 3, game->opps[i].y / 64 * 7 + 3, 2, makecol(255, 0, 0));
     }
+    line(game->buffer, game->player->posMapX * 7 + 3, game->player->posMapY * 7 + 3, game->player->posMapX * 7 + 3 + 10 * cos(game->player->angle), game->player->posMapY * 7 + 3 - 10 * sin(game->player->angle), makecol(255, 0, 255));
 }
 
 void displaySky(game3d_t *game)

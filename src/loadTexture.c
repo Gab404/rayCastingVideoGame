@@ -1,4 +1,5 @@
 #include <allegro.h>
+#include "header.h"
 
 BITMAP **loadTexture(char *filepath)
 {
