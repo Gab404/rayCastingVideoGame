@@ -52,7 +52,7 @@ int getNumNpc(void)
             numNpc += '0' - tmpString[i];
         }
 
-        if (indexPath != 0 && key[KEY_ENTER] && numNpc != 0) {
+        if (indexPath != 0 && key[KEY_ENTER] && numNpc != 0 && numNpc < 500) {
                 destroy_bitmap(buffer);
                 return -1 * numNpc;
         }
