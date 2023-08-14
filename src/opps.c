@@ -21,6 +21,26 @@ void animOpps(npc_t *opps, BITMAP ****anim)
     }
 }
 
+void loadStillOpps(game3d_t *game, int i, int index)
+{
+    game->opps[i].life = game->opps[index].life;
+    game->opps[i].dps = game->opps[index].dps;
+    game->opps[i].speed = game->opps[index].speed;
+    game->opps[i].points = game->opps[index].points;
+    game->opps[i].IndexAnim = 0;
+    game->opps[i].indexSprite = 0;
+    game->opps[i].maxLife = game->opps[index].life;
+    game->opps[i].dead = 0;
+    game->opps[i].attacking = 0;
+    game->opps[i].tempoAttack = time(NULL);
+    game->opps[i].walking = 0;
+    game->opps[i].playerSeen = 0;
+    game->opps[i].agro = 0;
+    game->opps[i].typeSprite = game->opps[index].typeSprite;
+    game->opps[i].clockStep = clock();
+    game->opps[i].tempoAnim = clock();
+}
+
 BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps, int nbOpps)
 {
     char filepath[30];
@@ -80,28 +100,12 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
         game->opps[i].typeSprite = typeOpps;
         game->opps[i].clockStep = clock();
         game->opps[i].tempoAnim = clock();
+        if ((i + 1 >= (game->nbNpc / nbOpps) * (typeOpps + 1)) && (typeOpps + 1 == nbOpps))
+            for (int j = i + 1; j < game->nbNpc; j++) {
+                loadStillOpps(game, j, rand() % game->nbNpc);
+            }
     }
     return animOpps;
-}
-
-void loadStillOpps(game3d_t *game, int i, int index)
-{
-    game->opps[i].life = game->opps[index].life;
-    game->opps[i].dps = game->opps[index].dps;
-    game->opps[i].speed = game->opps[index].speed;
-    game->opps[i].points = game->opps[index].points;
-    game->opps[i].IndexAnim = 0;
-    game->opps[i].indexSprite = 0;
-    game->opps[i].maxLife = game->opps[index].life;
-    game->opps[i].dead = 0;
-    game->opps[i].attacking = 0;
-    game->opps[i].tempoAttack = time(NULL);
-    game->opps[i].walking = 0;
-    game->opps[i].playerSeen = 0;
-    game->opps[i].agro = 0;
-    game->opps[i].typeSprite = game->opps[index].typeSprite;
-    game->opps[i].clockStep = clock();
-    game->opps[i].tempoAnim = clock();
 }
 
 void loadOpps(game3d_t *game)
@@ -121,9 +125,10 @@ void loadOpps(game3d_t *game)
     for (index = 0; index < nbOpps; index++)
         game->oppsAnim[index] = loadOneOpps(fp, game, index, game->oppsAnim[index], nbOpps);
 
-    if (game->nbNpc % nbOpps != 0)
-        for (int i = index; i - index < game->nbNpc % nbOpps; i++)
-            loadStillOpps(game, i, index - 1);
+
+    // if (game->nbNpc % nbOpps != 0)
+    //     for (int i = index; i - index < game->nbNpc % nbOpps; i++)
+    //         loadStillOpps(game, i, index - 1);
     
     fclose(fp);
 
@@ -151,7 +156,7 @@ void loadOpps(game3d_t *game)
         game->badPosY[i] = y * SIZE + 20;
         game->opps[i].x = x * SIZE + 20;
         game->opps[i].y = y * SIZE + 20;
-    }   
+    }
 }
 
 int playerIsSeen(game3d_t *game, double angle, int index)
