@@ -122,13 +122,10 @@ void loadOpps(game3d_t *game)
 
     game->opps = malloc(sizeof(npc_t) * game->nbNpc);
     checkPtrNull(game->opps, "Exit Failure: malloc failed");
+    if (nbOpps > game->nbNpc)
+        nbOpps = game->nbNpc;
     for (index = 0; index < nbOpps; index++)
         game->oppsAnim[index] = loadOneOpps(fp, game, index, game->oppsAnim[index], nbOpps);
-
-
-    // if (game->nbNpc % nbOpps != 0)
-    //     for (int i = index; i - index < game->nbNpc % nbOpps; i++)
-    //         loadStillOpps(game, i, index - 1);
     
     fclose(fp);
 

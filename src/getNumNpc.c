@@ -26,9 +26,8 @@ int getNumNpc(void)
         if (keyPressed > 0) {
             if (!keyAlreadyPress)
                 keyAlreadyPress = 1;
-        } else if (!keyPressed && keyAlreadyPress == 2) {
+        } else if (!keyPressed && keyAlreadyPress == 2)
             keyAlreadyPress = 0;
-        }
 
         if (keyAlreadyPress != 2) {
             if (keyPressed > 1) { // number key pressed
