@@ -10,7 +10,19 @@ char detectKey(void)
     return 0;
 }
 
-int getNumNpc(void)
+int getLimitMaxNpc(char **map)
+{
+    int limit = 0;
+
+    for (int i = 0; map[i] != NULL; i++)
+        for (int j = 0; map[i][j] != '\0'; j++)
+            if (map[i][j] == '*')
+                limit++;
+
+    return limit - 30;
+}
+
+int getNumNpc(char **map)
 {
     char tmpString[7];
     BITMAP *buffer = create_bitmap(SCREEN_W, SCREEN_H);
@@ -18,6 +30,9 @@ int getNumNpc(void)
     int numNpc;
     int indexPath = 0;
     int keyAlreadyPress = 0;
+    int limitMaxNpc;
+
+    limitMaxNpc = getLimitMaxNpc(map);
 
     while (!key[KEY_ESC]) {
         clear_bitmap(buffer);
@@ -48,16 +63,16 @@ int getNumNpc(void)
         numNpc = 0;
         for (int i = 0; i < indexPath; i++) {
             numNpc *= 10;
-            numNpc += '0' - tmpString[i];
+            numNpc += tmpString[i] - '0';
         }
 
-        if (indexPath != 0 && key[KEY_ENTER] && numNpc != 0 && numNpc < 500) {
+        if (indexPath != 0 && key[KEY_ENTER] && numNpc != 0 && numNpc < limitMaxNpc) {
                 destroy_bitmap(buffer);
-                return -1 * numNpc;
-        }
+                return numNpc;
+        } else if (numNpc >= limitMaxNpc) 
+            textout_ex(buffer, font, "You have reach the limit of NPC on this map !", 230, 400, makecol(255, 0, 0), -1);
         if (keyAlreadyPress)
             keyAlreadyPress = 2;
-
         blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
     }
     destroy_bitmap(buffer);

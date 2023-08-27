@@ -76,13 +76,13 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
-    game->nbNpc = getNumNpc();
+    game->map = loadMap("./conf/map.conf", &game->row, &game->col);
+    game->nbNpc = getNumNpc(game->map);
     clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
     game->skyX2 = SCREEN_W + 10;
     game->oldMouseX = mouse_x;
-    game->map = loadMap("./conf/map.conf", &game->row, &game->col);
     game->sky = load_bitmap("./assets/skyNight.bmp", NULL);
     game->texture = loadTexture("./assets/texture.bmp");
     game->player = createPlayer();
