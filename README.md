@@ -69,16 +69,9 @@ And thanks to the distances I was able to display more or less large rectangles 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-### On Linux
-    sudo apt install liballegro4.4 liballegro4-dev allegro4-doc
-
-    make
-
-    ./a.out
-
 ### On Windows
 
-Download [Allegro 4.4](https://www.allegro.cc/manual/4/api/) and 
+Download [Allegro 4.4](https://liballeg.org/old.html) and 
 
 Use the 
 
