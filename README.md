@@ -40,7 +40,7 @@
 A simple FPS video game with several type of enemies.
 The goal is to kill all enemies, with different weapons, without the player's life reaching zero. But after 5sec during which the player has not been hit he recovers 1 life point per second.
 
-The player move by using Z, Q, S, D keys (azerty keyboard), shoot by using left click, display pause menu thanks to H key and change the settings by using arrows.
+The player move by using Z, Q, S, D keys (azerty keyboard), shoot by using left click, display pause menu thanks to H key and close pause menu with Q and change the settings by using arrows.
 
 In the game everything is editable, the number of enemies, weapons, type of enemies and their stats, and the map.
 
