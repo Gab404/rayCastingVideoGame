@@ -8,7 +8,7 @@
 
 BITMAP **loadTexture(char *filepath);
 
-int getNumNpc(void);
+int getNumNpc(char **map);
 
 void pauseMenu(game3d_t *game);
 
