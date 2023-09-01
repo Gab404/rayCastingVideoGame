@@ -52,6 +52,9 @@ And thanks to the distances I was able to display more or less large rectangles 
 
 ![Product Name Screen Shot][less-texture]
 
+A little preview on Youtube :
+  https://www.youtube.com/watch?v=Whu1s6VjVgY
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
