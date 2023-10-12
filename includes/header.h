@@ -8,6 +8,16 @@
 
 BITMAP **loadTexture(char *filepath);
 
+void myDijkstra(game3d_t *game, npc_t *opps, double *xOpps, double *yOpps);
+
+void freeSommets(sommet_t ***sommets);
+sommet_t ***createAllSommet(char **map, int col, int row);
+
+file_t *creerFile(void);
+void enfiler(file_t *file, sommet_t *sommet);
+void defiler(file_t *file, sommet_t *target);
+int isEmpty(file_t *file);
+
 int getNumNpc(char **map);
 
 void pauseMenu(game3d_t *game);

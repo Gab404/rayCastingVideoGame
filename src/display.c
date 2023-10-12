@@ -40,19 +40,30 @@ void displayTarget(game3d_t *game)
 
 void displayMiniMap(game3d_t *game)
 {
+    int sizeTile = 280 / game->col;
+    
     for (int i = 0; game->map[i] != NULL; i++)
         for (int j = 0; game->map[i][j] != '\0'; j++) {
             if (game->map[i][j] == '*')
-                rectfill(game->buffer, j * 7, i * 7, j * 7 + 7, i * 7 + 7, makecol(255, 255, 255));
+                rectfill(game->buffer, j * sizeTile, i * sizeTile, j * sizeTile + sizeTile, i * sizeTile + sizeTile, makecol(255, 255, 255));
             else
-                rectfill(game->buffer, j * 7, i * 7, j * 7 + 7, i * 7 + 7, makecol(0, 0, 0));
+                rectfill(game->buffer, j * sizeTile, i * sizeTile, j * sizeTile + sizeTile, i * sizeTile + sizeTile, makecol(0, 0, 0));
         }
-    circlefill(game->buffer, game->player->posMapX * 7 + 3, game->player->posMapY * 7 + 3, 2, makecol(0, 255, 0));
+    double x, y;
+
+    circlefill(game->buffer, game->player->posMapX * sizeTile + ((game->player->posxCase / 64) * sizeTile), (game->player->posMapY + 1) * sizeTile - ((game->player->posyCase / 64) * sizeTile), 2, makecol(0, 255, 0));
     for (int i = 0; i < game->nbNpc; i++) {
-        if (game->opps[i].IndexAnim != 2)
-            circlefill(game->buffer, game->opps[i].x / 64 * 7 + 3, game->opps[i].y / 64 * 7 + 3, 2, makecol(255, 0, 0));
+        if (game->opps[i].IndexAnim != 2) {
+            circlefill(game->buffer, game->opps[i].x / 64 * sizeTile + sizeTile / 2, game->opps[i].y / 64 * sizeTile + sizeTile / 2, 2, makecol(255, 0, 0));
+            // if (!game->opps[0].playerSeen) {
+            //     myDijkstra(game, &game->opps[i], &x, &y);
+            //     x += game->opps[i].x;
+            //     y += game->opps[i].y;
+            // }
+        }
     }
-    line(game->buffer, game->player->posMapX * 7 + 3, game->player->posMapY * 7 + 3, game->player->posMapX * 7 + 3 + 10 * cos(game->player->angle), game->player->posMapY * 7 + 3 - 10 * sin(game->player->angle), makecol(255, 0, 255));
+    if (game->opps[0].playerSeen)
+        line(game->buffer, game->opps[0].x / 64 * sizeTile + sizeTile / 2, game->opps[0].y / 64 * sizeTile + sizeTile / 2, game->player->posMapX * sizeTile + sizeTile / 2, game->player->posMapY * sizeTile + sizeTile / 2, makecol(0, 0, 255));
 }
 
 void displaySky(game3d_t *game)

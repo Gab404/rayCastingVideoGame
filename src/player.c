@@ -29,11 +29,11 @@ void movePlayer(game3d_t *game)
 {
     int moved = 0;
 
-    if (game->oldMouseX < mouse_x) {
+    if (game->oldMouseX < mouse_x && !game->centerCursor) {
         game->player->angle -= game->player->sensitivity * (mouse_x - game->oldMouseX);
         game->skyX -= 15;
         game->skyX2 -= 15;
-    }else if (game->oldMouseX > mouse_x) {
+    }else if (game->oldMouseX > mouse_x && !game->centerCursor) {
         game->player->angle += game->player->sensitivity * (game->oldMouseX - mouse_x);
         game->skyX += 15;
         game->skyX2 += 15;
@@ -77,7 +77,7 @@ player_t *createPlayer(void)
     player->sensitivity = 0.0175; // 0.0175 radius = 1°
     player->angle = 0.01;
     player->life = 100;
-    player->screenX = 200;
+    player->screenX = 250;
     player->screenY = 135;
     player->isWalked = false;
     player->indexGun = 0;

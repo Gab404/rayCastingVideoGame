@@ -113,7 +113,7 @@ gun_t **loadGuns(gun_t **guns)
     int nbGuns;
     int nbSpriteReload, nbSprireShoot;
     char filepath[50];
-    FILE *fp = fopen("./conf/guns.conf", "r");
+    FILE *fp = fopen("../conf/guns.conf", "r");
 
     checkPtrNull(fp, "Exit Failure: error at guns.conf opening\n");
     fscanf(fp, "%d", &nbGuns);

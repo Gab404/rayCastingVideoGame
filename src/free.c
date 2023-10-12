@@ -42,6 +42,7 @@ void freeGame(game3d_t *game)
 {
     destroy_bitmap(game->buffer);
     freeArray(game->map);
+    freeSommets(game->sommets);
     destroy_bitmap(game->munLogo);
     destroy_bitmap(game->sky);
     for (int i = 0; game->texture[i] != NULL; i++)

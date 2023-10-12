@@ -110,12 +110,12 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
 
 void loadOpps(game3d_t *game)
 {
-    FILE *fp = fopen("./conf/opps.conf", "r");
+    FILE *fp = fopen("../conf/opps.conf", "r");
     int nbOpps;
     int x, y;
     int index;
 
-    checkPtrNull(fp, "Exit Failure: ./conf/opps.conf opening failed\n");
+    checkPtrNull(fp, "Exit Failure: ../conf/opps.conf opening failed\n");
     fscanf(fp, "%d", &nbOpps);
     game->oppsAnim = malloc(sizeof(BITMAP ***) * (nbOpps + 1));
     game->oppsAnim[nbOpps] = NULL;
@@ -153,6 +153,8 @@ void loadOpps(game3d_t *game)
         game->badPosY[i] = y * SIZE + 20;
         game->opps[i].x = x * SIZE + 20;
         game->opps[i].y = y * SIZE + 20;
+        // game->opps[i].x = 5 * SIZE + 20;
+        // game->opps[i].y = 2 * SIZE + 20;
     }
 }
 
@@ -316,17 +318,29 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
     double posX, posY;
     int checkX, checkY;
 
-    if (opps->x < player->screenX) {
-        posX = opps->speed * cos(angleMonster);
-        posY = -opps->speed * sin(angleMonster);
-    } else {
-        posX = -opps->speed * cos(angleMonster);
-        posY = opps->speed * sin(angleMonster);
-    }
+    if (opps->playerSeen) {
+        if (opps->x < player->screenX) {
+            posX = opps->speed * cos(angleMonster);
+            posY = -opps->speed * sin(angleMonster);
+        } else {
+            posX = -opps->speed * cos(angleMonster);
+            posY = opps->speed * sin(angleMonster);
+        }
+    } else if (opps->agro)
+        myDijkstra(game, opps, &posX, &posY);
+
     checkX = opps->x + posX;
     checkY = opps->y + posY;
 
-    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && clock() - opps->clockStep >= 35 && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) {
+    if (!opps->playerSeen) {
+        if (clock() - opps->clockStep >= 35 && checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && !collideBetweenOpps(game, checkX, checkY, index)) {
+            opps->x = (int)checkX;
+            opps->y = (int)checkY;
+            opps->clockStep = clock();
+        }
+    }
+
+    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && clock() - opps->clockStep >= 35 && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) { // && (opps->playerSeen || opps->agro)
         if ((checkX >= player->screenX + 30 || checkX <= player->screenX - 30) && (checkY >= player->screenY + 30 || checkY <= player->screenY - 30)) {
             opps->x += round(posX);
             opps->y += round(posY);

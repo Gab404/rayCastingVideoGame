@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <allegro.h>
 #include <time.h>
+#include "graphe.h"
 
 typedef struct gun_s {
     BITMAP ***sprite;
@@ -72,6 +73,7 @@ typedef struct game3d_s {
     int col;
     int oldMouseX;
     int indexSaveData;
+    sommet_t ***sommets;
     BITMAP *buffer;
     BITMAP *sky;
     BITMAP *pauseBanner;
@@ -93,6 +95,7 @@ typedef struct game3d_s {
     int midScreenH;
     int volume;
     int nbNpc;
+    bool centerCursor
 }game3d_t;
 
 #endif /*STRUCT_H*/
