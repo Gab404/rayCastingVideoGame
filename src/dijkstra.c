@@ -83,28 +83,28 @@ void getFirstStep(BITMAP *buffer, sommet_t *endSommet, sommet_t *startSommet, do
     rectfill(buffer, nextSommet->x * 7, nextSommet->y * 7, nextSommet->x * 7 + 7, nextSommet->y * 7 + 7, makecol(213,6, 255));
     if (nextSommet->y < startSommet->y) {
         if (nextSommet->x < startSommet->x) // diagonale en haut à gauche
-            angle = (3 * PI) / 4;
+            angle = -0.75;
         else if (nextSommet->x == startSommet->x)
-            angle = PI / 2;
+            angle = 1.5;
         else
-            angle = PI / 4;
+            angle = 0.75;
     } else if (nextSommet->y > startSommet->y) {
         if (nextSommet->x < startSommet->x)
-            angle = (5 * PI) / 4;
+            angle = 0.75;
         else if (nextSommet->x == startSommet->x)
-            angle = (3 * PI) / 2;
+            angle = 1.5;
         else
-            angle = (7 * PI) / 4;
+            angle = -0.75;
     } else if (nextSommet->x < startSommet->x)
-        angle = PI;
+        angle = 0.00;
     else
         angle = 0.00;
 
-    if (opps->x <= playerX) {
+    if (opps->x < playerX) {
         *x = cos(angle) * opps->speed;
         *y = -sin(angle) * opps->speed;
     } else {
-        *x = opps->speed * cos(angle);
+        *x = -opps->speed * cos(angle);
         *y = opps->speed * sin(angle);
     }
 }
@@ -131,15 +131,6 @@ void myDijkstra(game3d_t *game, npc_t *opps, double *xOpps, double *yOpps)
         checkNeighbor(currNode, currDist, file); // Parcours de chaque sommets liés au sommet courant
         currNode = sortDist(file, currNode, &currDist); // Algo de trie pour choisir le sommet avec le chemin le plus court
     }
-
-    // if (game->sommets[yFin][xFin]->pred == NULL) {
-    //     int count = 0;
-    //     for (int i = 0; game->sommets[i] != NULL; i++)
-    //         for (int j = 0; game->sommets[i][j] != NULL; j++)
-    //             if (game->sommets[i][j]->color == 1)
-    //                 count++;
-    //     printf("NULL x:%d y:%d count = %d sDep: %c\n", game->sommets[yFin][xFin]->x, game->sommets[yFin][xFin]->y, count, game->map[yDep][xDep]);
-    // }
 
     getFirstStep(game->buffer, game->sommets[yFin][xFin], game->sommets[yDep][xDep], xOpps, yOpps, opps, game->player->screenX);
     free(file);
