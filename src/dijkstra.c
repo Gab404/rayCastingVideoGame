@@ -77,8 +77,6 @@ void getFirstStep(BITMAP *buffer, sommet_t *endSommet, sommet_t *startSommet, do
     sommet_t *nextSommet = endSommet;
     double angle;
 
-    if (nextSommet->pred == NULL)
-        printf("NULL\n");
     while (nextSommet->pred->dist != 0)
         nextSommet = nextSommet->pred;
 
@@ -117,22 +115,31 @@ void myDijkstra(game3d_t *game, npc_t *opps, double *xOpps, double *yOpps)
     int xFin = game->player->posMapX, yFin = game->player->posMapY;
     sommet_t *currNode = game->sommets[yDep][xDep];
     file_t *file = creerFile();
-    double currDist = 0;
+    double currDist = 0.00;
 
-    if (xDep == xFin && yDep == yFin) {
+    if ((xDep == xFin && yDep == yFin) || (game->map[yDep][xDep] != '*')) {
         free(file);
         return;
     }
 
     initSommet(game->sommets);
-    currNode->dist = 0;
-    enfiler(file, game->sommets[yDep][xDep]);
+    currNode->dist = currDist;
+    enfiler(file, currNode);
     while (!allVisited(file, game->sommets[yFin][xFin])) {
-        defiler(file, currNode);
         currNode->color = 1; // Marquage du sommet courant
+        defiler(file, currNode);
         checkNeighbor(currNode, currDist, file); // Parcours de chaque sommets liés au sommet courant
         currNode = sortDist(file, currNode, &currDist); // Algo de trie pour choisir le sommet avec le chemin le plus court
     }
+
+    // if (game->sommets[yFin][xFin]->pred == NULL) {
+    //     int count = 0;
+    //     for (int i = 0; game->sommets[i] != NULL; i++)
+    //         for (int j = 0; game->sommets[i][j] != NULL; j++)
+    //             if (game->sommets[i][j]->color == 1)
+    //                 count++;
+    //     printf("NULL x:%d y:%d count = %d sDep: %c\n", game->sommets[yFin][xFin]->x, game->sommets[yFin][xFin]->y, count, game->map[yDep][xDep]);
+    // }
 
     getFirstStep(game->buffer, game->sommets[yFin][xFin], game->sommets[yDep][xDep], xOpps, yOpps, opps, game->player->screenX);
     free(file);

@@ -326,7 +326,7 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
             posX = -opps->speed * cos(angleMonster);
             posY = opps->speed * sin(angleMonster);
         }
-    } else if (opps->agro)
+    } else
         myDijkstra(game, opps, &posX, &posY);
 
     checkX = opps->x + posX;

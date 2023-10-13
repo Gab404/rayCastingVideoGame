@@ -55,15 +55,8 @@ void displayMiniMap(game3d_t *game)
     for (int i = 0; i < game->nbNpc; i++) {
         if (game->opps[i].IndexAnim != 2) {
             circlefill(game->buffer, game->opps[i].x / 64 * sizeTile + sizeTile / 2, game->opps[i].y / 64 * sizeTile + sizeTile / 2, 2, makecol(255, 0, 0));
-            // if (!game->opps[0].playerSeen) {
-            //     myDijkstra(game, &game->opps[i], &x, &y);
-            //     x += game->opps[i].x;
-            //     y += game->opps[i].y;
-            // }
         }
     }
-    if (game->opps[0].playerSeen)
-        line(game->buffer, game->opps[0].x / 64 * sizeTile + sizeTile / 2, game->opps[0].y / 64 * sizeTile + sizeTile / 2, game->player->posMapX * sizeTile + sizeTile / 2, game->player->posMapY * sizeTile + sizeTile / 2, makecol(0, 0, 255));
 }
 
 void displaySky(game3d_t *game)

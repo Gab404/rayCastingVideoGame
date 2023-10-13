@@ -103,10 +103,10 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
-    game->map = loadMap("../conf/mapTest.conf", &game->row, &game->col);
+    game->map = loadMap("../conf/map.conf", &game->row, &game->col);
     game->sommets = createAllSommet(game->map, game->col, game->row);
     // game->nbNpc = getNumNpc(game->map);
-    game->nbNpc = 15;
+    game->nbNpc = 50;
     clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
