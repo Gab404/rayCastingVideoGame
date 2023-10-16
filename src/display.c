@@ -40,7 +40,7 @@ void displayTarget(game3d_t *game)
 
 void displayMiniMap(game3d_t *game)
 {
-    int sizeTile = 280 / game->col;
+    int sizeTile = 200 / game->col;
     
     for (int i = 0; game->map[i] != NULL; i++)
         for (int j = 0; game->map[i][j] != '\0'; j++) {
@@ -49,7 +49,6 @@ void displayMiniMap(game3d_t *game)
             else
                 rectfill(game->buffer, j * sizeTile, i * sizeTile, j * sizeTile + sizeTile, i * sizeTile + sizeTile, makecol(0, 0, 0));
         }
-    double x, y;
 
     circlefill(game->buffer, game->player->posMapX * sizeTile + ((game->player->posxCase / 64) * sizeTile), (game->player->posMapY + 1) * sizeTile - ((game->player->posyCase / 64) * sizeTile), 2, makecol(0, 255, 0));
     for (int i = 0; i < game->nbNpc; i++) {
@@ -57,6 +56,21 @@ void displayMiniMap(game3d_t *game)
             circlefill(game->buffer, game->opps[i].x / 64 * sizeTile + sizeTile / 2, game->opps[i].y / 64 * sizeTile + sizeTile / 2, 2, makecol(255, 0, 0));
         }
     }
+
+    line(game->buffer, game->player->posMapX * sizeTile + ((game->player->posxCase / 64) * sizeTile), (game->player->posMapY + 1) * sizeTile - ((game->player->posyCase / 64) * sizeTile), game->player->posMapX * sizeTile + ((game->player->posxCase / 64) * sizeTile) + cos((double)game->player->angle) * 15, (game->player->posMapY + 1) * sizeTile - ((game->player->posyCase / 64) * sizeTile) - sin((double)game->player->angle) * 15, makecol(0, 0, 0));
+}
+
+void displayFps(int *fps, char *str, BITMAP *buffer, time_t *fpsClock)
+{
+    if (time(NULL) - *fpsClock >= 1) {
+        *fpsClock = time(NULL);
+        sprintf(str, "%d", *fps);
+        *fps = 0;
+    }
+    *fps += 1;
+    textout_ex(buffer, font, "FPS:", 30, 150, makecol(255, 255, 255), -1);
+    if (str[0] != '0')
+        textout_ex(buffer, font, str, 70, 150, makecol(255, 255, 255), -1);
 }
 
 void displaySky(game3d_t *game)
@@ -94,8 +108,8 @@ void display3D(game3d_t *game)
             projWidth = (20000 / game->allDist[i]); // => projWidth / 2
             projHeight = 40000 / game->allDist[i];
             if (game->opps[indexOpps].life != 0)
-                rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + game->allDist[i] / 15, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife  + game->allDist[i] / 15, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
-            stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth + game->allDist[i] / 15, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
+                rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + game->allDist[i] / 15 + 1000 / projWidth, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife + game->allDist[i] / 15 + 1000 / projWidth, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
+            stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth + game->allDist[i] / 15 + 1000 / projWidth, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
         } else if (game->allPosTexture[i] >= 0) { // display wall
             
             distWall = game->allDist[i] * cos((initAngle - game->allPos[i] * 0.004375) - game->player->angle); // enlever l'aspect de fish-eye

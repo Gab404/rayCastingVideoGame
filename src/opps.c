@@ -148,13 +148,13 @@ void loadOpps(game3d_t *game)
     }
 
     for (int i = 0; i < game->nbNpc; i++) {
-        generateSpawnCoord(game, &x, &y);
-        game->badPosX[i] = x * SIZE + 20;
-        game->badPosY[i] = y * SIZE + 20;
-        game->opps[i].x = x * SIZE + 20;
-        game->opps[i].y = y * SIZE + 20;
-        // game->opps[i].x = 5 * SIZE + 20;
-        // game->opps[i].y = 2 * SIZE + 20;
+        // generateSpawnCoord(game, &x, &y);
+        // game->badPosX[i] = x * SIZE + 20;
+        // game->badPosY[i] = y * SIZE + 20;
+        // game->opps[i].x = x * SIZE + 20;
+        // game->opps[i].y = y * SIZE + 20;
+        game->opps[i].x = 7 * SIZE + 20;
+        game->opps[i].y = 3 * SIZE + 20;
     }
 }
 
@@ -318,16 +318,16 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
     double posX, posY;
     int checkX, checkY;
 
-    if (opps->playerSeen) {
-        if (opps->x < player->screenX) {
-            posX = opps->speed * cos(angleMonster);
-            posY = -opps->speed * sin(angleMonster);
-        } else {
-            posX = -opps->speed * cos(angleMonster);
-            posY = opps->speed * sin(angleMonster);
-        }
-    } else
-        myDijkstra(game, opps, &posX, &posY);
+    // if (opps->playerSeen) {
+    //     if (opps->x < player->screenX) {
+    //         posX = opps->speed * cos(angleMonster);
+    //         posY = -opps->speed * sin(angleMonster);
+    //     } else {
+    //         posX = -opps->speed * cos(angleMonster);
+    //         posY = opps->speed * sin(angleMonster);
+    //     }
+    // } else
+    myDijkstra(game, opps, &posX, &posY);
 
     checkX = opps->x + posX;
     checkY = opps->y + posY;
@@ -372,7 +372,6 @@ void calcSprite(game3d_t *game, int index)
     BITMAP *sprite = game->oppsAnim[game->opps[index].typeSprite][game->opps[index].IndexAnim][game->opps[index].indexSprite];
 
     game->opps[index].playerSeen = playerIsSeen(game, angleMonster, index);
-    // printf("%.2f\n", angleMonster);
     moveOpps(game, &game->opps[index], game->player, angleMonster, game->map, index);
     if (game->opps[index].x < game->player->screenX)
         angleMonster = PI + angleMonster;

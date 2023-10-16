@@ -22,8 +22,6 @@ int main(void)
     }
     set_alpha_blender();
 
-    show_mouse(screen);
-
     gameLoop();
    
     allegro_exit();

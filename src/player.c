@@ -28,15 +28,19 @@ int isCollision(int x, int y, char **map)
 void movePlayer(game3d_t *game)
 {
     int moved = 0;
+    int offsetSky = 876.142857 * game->player->sensitivity;
+
+    if (offsetSky < 1)
+        offsetSky = 1;
 
     if (game->oldMouseX < mouse_x && !game->centerCursor) {
         game->player->angle -= game->player->sensitivity * (mouse_x - game->oldMouseX);
-        game->skyX -= 15;
-        game->skyX2 -= 15;
+        game->skyX -= offsetSky;
+        game->skyX2 -= offsetSky;
     }else if (game->oldMouseX > mouse_x && !game->centerCursor) {
         game->player->angle += game->player->sensitivity * (game->oldMouseX - mouse_x);
-        game->skyX += 15;
-        game->skyX2 += 15;
+        game->skyX += offsetSky;
+        game->skyX2 += offsetSky;
     }
 
     if ((key[KEY_UP] || key[KEY_W]) && !isCollision(game->player->screenX + round(cos(game->player->angle)) * 10, game->player->screenY - round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 5) {
@@ -77,8 +81,8 @@ player_t *createPlayer(void)
     player->sensitivity = 0.0175; // 0.0175 radius = 1°
     player->angle = 0.01;
     player->life = 100;
-    player->screenX = 250;
-    player->screenY = 135;
+    player->screenX = 130;
+    player->screenY = 195;
     player->isWalked = false;
     player->indexGun = 0;
     player->indexSpriteGun = 0;

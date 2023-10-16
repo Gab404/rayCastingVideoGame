@@ -34,6 +34,7 @@ void displaySky(game3d_t *game);
 void display3D(game3d_t *game);
 void displayLife(game3d_t *game);
 void displayScore(game3d_t *game);
+void displayFps(int *fps, char *str, BITMAP *buffer, time_t *fpsClock);
 
 game3d_t *createGame(void);
 void gameLoop(void);

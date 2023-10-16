@@ -59,6 +59,9 @@ void gameLoop(void)
 {
     POINT cursorPos;
     game3d_t *game = createGame();
+    int fps = 0;
+    char fpsString[5];
+    time_t fpsClock = time(NULL);
 
     HMODULE user32 = LoadLibrary("user32.dll");
     FARPROC setCursorPosFunc = GetProcAddress(user32, "SetCursorPos");
@@ -66,11 +69,11 @@ void gameLoop(void)
 
     // PlaySound("../assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
     
+    fpsString[0] = '0';
     while (!key[KEY_ESC] && !winOrLose(game)) {
         clear_bitmap(game->buffer);
-        game->player->life = 100;
         replaceCursor(game, setCursorPosFunc, getCursorPosFunc);
-
+        game->player->life = 100;
         playerHeal(game);
         displaySky(game);
         movePlayer(game);
@@ -85,6 +88,7 @@ void gameLoop(void)
         displayTarget(game);
         displayLife(game);
         displayScore(game);
+        displayFps(&fps, fpsString, game->buffer, &fpsClock);
 
         game->oldMouseX = mouse_x;
         game->indexSaveData = 0;
@@ -93,6 +97,7 @@ void gameLoop(void)
 
         blit(game->buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
     }
+
     // PlaySound(NULL, NULL, SND_ASYNC | SND_LOOP);
     freeGame(game);
     FreeLibrary(user32);
@@ -105,8 +110,8 @@ game3d_t *createGame(void)
     checkPtrNull(game, "Exit Failure: malloc failed\n");
     game->map = loadMap("../conf/mapTest.conf", &game->row, &game->col);
     game->sommets = createAllSommet(game->map, game->col, game->row);
-    game->nbNpc = getNumNpc(game->map);
-    // game->nbNpc = 1;
+    // game->nbNpc = getNumNpc(game->map);
+    game->nbNpc = 1;
     clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
