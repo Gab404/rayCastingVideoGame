@@ -108,8 +108,8 @@ void display3D(game3d_t *game)
             projWidth = (20000 / game->allDist[i]); // => projWidth / 2
             projHeight = 40000 / game->allDist[i];
             if (game->opps[indexOpps].life != 0)
-                rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + game->allDist[i] / 15 + 1000 / projWidth, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife + game->allDist[i] / 15 + 1000 / projWidth, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
-            stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth + game->allDist[i] / 15 + 1000 / projWidth, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
+                rectfill(game->buffer, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + game->allDist[i] / 15, game->midScreenH - projHeight / 3, game->midScreenW + (game->allPos[i] * 4) - projWidth / 2 + (game->opps[indexOpps].life * projWidth) / game->opps[indexOpps].maxLife + game->allDist[i] / 15, game->midScreenH - projHeight / 3 + projHeight / 50, makecol(255, 0, 0));
+            stretch_sprite(game->buffer, tmpSprite, game->midScreenW + (game->allPos[i] * 4) - projWidth + game->allDist[i] / 15, game->midScreenH - projHeight / 3, projWidth * 2, projHeight);
         } else if (game->allPosTexture[i] >= 0) { // display wall
             
             distWall = game->allDist[i] * cos((initAngle - game->allPos[i] * 0.004375) - game->player->angle); // enlever l'aspect de fish-eye

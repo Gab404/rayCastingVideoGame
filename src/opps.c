@@ -148,13 +148,13 @@ void loadOpps(game3d_t *game)
     }
 
     for (int i = 0; i < game->nbNpc; i++) {
-        // generateSpawnCoord(game, &x, &y);
-        // game->badPosX[i] = x * SIZE + 20;
-        // game->badPosY[i] = y * SIZE + 20;
-        // game->opps[i].x = x * SIZE + 20;
-        // game->opps[i].y = y * SIZE + 20;
-        game->opps[i].x = 7 * SIZE + 20;
-        game->opps[i].y = 3 * SIZE + 20;
+        generateSpawnCoord(game, &x, &y);
+        game->badPosX[i] = x * SIZE + 20;
+        game->badPosY[i] = y * SIZE + 20;
+        game->opps[i].x = x * SIZE + 20;
+        game->opps[i].y = y * SIZE + 20;
+        // game->opps[i].x = 7 * SIZE + 20;
+        // game->opps[i].y = 3 * SIZE + 20;
     }
 }
 
@@ -340,7 +340,7 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
         }
     }
 
-    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)(checkY + posY * 3) / SIZE][(int)(checkX + posX * 3) / SIZE] == '*' && clock() - opps->clockStep >= 35 && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) { // && (opps->playerSeen || opps->agro)
+    if (checkCoordCrash((int)(checkY + posY * 3) / SIZE, (int)(checkX + posX * 3) / SIZE, game->row, game->col) && map[(int)checkY / SIZE][(int)checkX / SIZE] == '*' && clock() - opps->clockStep >= 35 && opps->IndexAnim != 2 && !collideBetweenOpps(game, checkX, checkY, index) && (opps->playerSeen || opps->agro)) {
         if ((checkX >= player->screenX + 30 || checkX <= player->screenX - 30) && (checkY >= player->screenY + 30 || checkY <= player->screenY - 30)) {
             opps->x += round(posX);
             opps->y += round(posY);
@@ -390,7 +390,7 @@ void calcSprite(game3d_t *game, int index)
             alpha += 2 * PI;
         else if (alpha > 5.5)
             alpha -= 2 * PI;
-
+        // printf("%.2f %.2f\n", angleMonster, alpha);
         if (((alpha <= 0.1 && alpha >= 0) || (alpha >= -0.1 && alpha <= 0)) && game->player->shooting && game->opps[index].playerSeen && !game->opps[index].dead) { // si le joueur shoot sur l'ennemie
             game->opps[index].life -= game->player->guns[game->player->indexGun]->dps;
             game->player->shooting = 0;

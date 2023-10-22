@@ -80,20 +80,25 @@ void getFirstStep(BITMAP *buffer, sommet_t *endSommet, sommet_t *startSommet, do
     while (nextSommet->pred->dist != 0)
         nextSommet = nextSommet->pred;
 
-    // rectfill(buffer, nextSommet->x * 200 / 40, nextSommet->y * 200 / 40, nextSommet->x * 200 / 40 + 200 / 40, nextSommet->y * 200 / 40 + 200 / 40, makecol(213,6, 255));
     if (nextSommet->y < startSommet->y) {
         if (nextSommet->x < startSommet->x) // diagonale en haut à gauche
             angle = -0.75;
-        else if (nextSommet->x == startSommet->x)
-            angle = 1.5;
-        else
+        else if (nextSommet->x == startSommet->x) {
+            if (playerX < opps->x)
+                angle = -1.5;
+            else
+                angle = 1.5;
+        } else
             angle = 0.75;
     } else if (nextSommet->y > startSommet->y) {
         if (nextSommet->x < startSommet->x)
             angle = 0.75;
-        else if (nextSommet->x == startSommet->x)
-            angle = 1.5;
-        else
+        else if (nextSommet->x == startSommet->x) {
+            if (playerX > opps->x)
+                angle = -1.5;
+            else
+                angle = 1.5;
+        } else
             angle = -0.75;
     } else if (nextSommet->x < startSommet->x)
         angle = 0.00;
