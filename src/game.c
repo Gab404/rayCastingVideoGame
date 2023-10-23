@@ -53,6 +53,14 @@ void replaceCursor(game3d_t *game, FARPROC setCursorPosFunc, FARPROC getCursorPo
         ((BOOL(WINAPI *)(int, int))setCursorPosFunc)((cursorPos.x - mouse_x) + (SCREEN_W - 49), cursorPos.y);
         mouse_x = SCREEN_W - 49;
     }
+
+    if (mouse_y >= SCREEN_H - 50) {
+        ((BOOL(WINAPI *)(int, int))setCursorPosFunc)(cursorPos.x, cursorPos.y - (mouse_y - 50));
+        mouse_y = 51;
+    } else if (mouse_y <= 50) {
+        ((BOOL(WINAPI *)(int, int))setCursorPosFunc)(cursorPos.x, (cursorPos.y - mouse_y) + (SCREEN_H - 49));
+        mouse_y = SCREEN_H - 49;   
+    }
 }
 
 void gameLoop(void)
@@ -67,13 +75,13 @@ void gameLoop(void)
     FARPROC setCursorPosFunc = GetProcAddress(user32, "SetCursorPos");
     FARPROC getCursorPosFunc = GetProcAddress(user32, "GetCursorPos");
 
-    // PlaySound("../assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
+    PlaySound("../assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
     
     fpsString[0] = '0';
     while (!key[KEY_ESC] && !winOrLose(game)) {
         clear_bitmap(game->buffer);
         replaceCursor(game, setCursorPosFunc, getCursorPosFunc);
-        game->player->life = 100;
+
         playerHeal(game);
         displaySky(game);
         movePlayer(game);
@@ -98,7 +106,7 @@ void gameLoop(void)
         blit(game->buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
     }
 
-    // PlaySound(NULL, NULL, SND_ASYNC | SND_LOOP);
+    PlaySound(NULL, NULL, SND_ASYNC | SND_LOOP);
     freeGame(game);
     FreeLibrary(user32);
 }
