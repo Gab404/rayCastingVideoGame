@@ -118,8 +118,7 @@ game3d_t *createGame(void)
     checkPtrNull(game, "Exit Failure: malloc failed\n");
     game->map = loadMap("../conf/map.conf", &game->row, &game->col);
     game->sommets = createAllSommet(game->map, game->col, game->row);
-    // game->nbNpc = getNumNpc(game->map);
-    game->nbNpc = 10;
+    game->nbNpc = getNumNpc(game->map);
     clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;

@@ -318,16 +318,16 @@ void moveOpps(game3d_t *game, npc_t *opps, player_t *player, double angleMonster
     double posX, posY;
     int checkX, checkY;
 
-    // if (opps->playerSeen) {
-    //     if (opps->x < player->screenX) {
-    //         posX = opps->speed * cos(angleMonster);
-    //         posY = -opps->speed * sin(angleMonster);
-    //     } else {
-    //         posX = -opps->speed * cos(angleMonster);
-    //         posY = opps->speed * sin(angleMonster);
-    //     }
-    // } else
-    myDijkstra(game, opps, &posX, &posY);
+    if (opps->playerSeen) {
+        if (opps->x < player->screenX) {
+            posX = opps->speed * cos(angleMonster);
+            posY = -opps->speed * sin(angleMonster);
+        } else {
+            posX = -opps->speed * cos(angleMonster);
+            posY = opps->speed * sin(angleMonster);
+        }
+    } else if (opps->agro)
+        myDijkstra(game, opps, &posX, &posY);
 
     checkX = opps->x + posX;
     checkY = opps->y + posY;

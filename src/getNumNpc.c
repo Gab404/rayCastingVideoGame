@@ -34,6 +34,8 @@ int getNumNpc(char **map)
 
     limitMaxNpc = getLimitMaxNpc(map);
 
+    for (int i = 0; i < 7; i++)
+        tmpString[i] = '\0';
     while (!key[KEY_ESC]) {
         clear_bitmap(buffer);
         textout_ex(buffer, font, "Number of NPC :", 345, 300, makecol(255, 255, 255), -1);
