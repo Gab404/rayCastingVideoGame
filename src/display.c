@@ -41,6 +41,7 @@ void displayTarget(game3d_t *game)
 void displayMiniMap(game3d_t *game)
 {
     int sizeTile = 200 / game->col;
+    float oppXcase, oppYcase;
     
     for (int i = 0; game->map[i] != NULL; i++)
         for (int j = 0; game->map[i][j] != '\0'; j++) {
@@ -53,7 +54,9 @@ void displayMiniMap(game3d_t *game)
     circlefill(game->buffer, game->player->posMapX * sizeTile + ((game->player->posxCase / 64) * sizeTile), (game->player->posMapY + 1) * sizeTile - ((game->player->posyCase / 64) * sizeTile), 2, makecol(0, 255, 0));
     for (int i = 0; i < game->nbNpc; i++) {
         if (game->opps[i].IndexAnim != 2) {
-            circlefill(game->buffer, game->opps[i].x / 64 * sizeTile + sizeTile / 2, game->opps[i].y / 64 * sizeTile + sizeTile / 2, 2, makecol(255, 0, 0));
+            oppXcase = game->opps[i].x - (game->opps[i].x) / 64 * 64;
+            oppYcase = 63 - (game->opps[i].y - (game->opps[i].y) / 64 * 64);
+            circlefill(game->buffer, game->opps[i].x / 64 * sizeTile + ((float)(oppXcase / 64) * sizeTile), game->opps[i].y / 64 * sizeTile + sizeTile - ((float)(oppYcase / 64) * sizeTile), 2, makecol(255, 0, 0));
         }
     }
 

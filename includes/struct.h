@@ -95,7 +95,7 @@ typedef struct game3d_s {
     int midScreenH;
     int volume;
     int nbNpc;
-    bool centerCursor
-}game3d_t;
+    bool centerCursor;
+} game3d_t;
 
 #endif /*STRUCT_H*/
