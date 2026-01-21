@@ -28,7 +28,7 @@ The player move by using Z, Q, S, D keys (azerty keyboard), shoot by using left 
 In the game everything is editable, the number of enemies, weapons, type of enemies and their stats, and the map.
 
 <div align="center">
-  <img src="./assets/raycastingDisplay.png" alt="Raycasting" width="400">
+  <img src="./assets/raycastingDisplay.PNG" alt="Raycasting" width="400">
 </div>
 </br>
 
@@ -114,16 +114,5 @@ It's possible to add/remove textures by adding/removing them in the file `./asse
 <!-- CONTACT -->
 ## Contact
 
-Gabriel GUIET-DUPRE - [in: gabriel-guiet-dupre](https://linkedin.com/in/gabriel-guiet-dupre) - gabriel.guietdupre@edu.ece.fr
+Gabriel Guiet-Dupré - [LinkedIn](https://linkedin.com/in/gabriel-guiet-dupre) - gabriel.guietdupre@edu.ece.fr
 
-Project Link: [https://github.com/gab_gdp/rayCastingVideoGame](https://github.com/Gab404/my_perceptron)
-
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[linkedin-url]: https://linkedin.com/in/gabriel-guiet-dupre
-[schema-network]: ./assets/gameplay.png
-[loss-function]: ./assets/raycastingDisplay.PNG
-[less-texture]: ./assets/lessTexture.png
