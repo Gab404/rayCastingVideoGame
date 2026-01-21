@@ -73,13 +73,7 @@ A little preview on Youtube :
 
 Download [Allegro 4.4](https://liballeg.org/old.html) and 
 
-Use the 
-
-`CMakeLists.txt` (and put exe file to root)
-
-or 
-
-`gcc ./src/*.c -lm -lalleg44 -lmingw32 -lwinmm -I./includes`
+To compile : `gcc ./src/*.c -lm -lalleg44 -lmingw32 -lwinmm -I./includes`
 
 
 The conf input file should be as follows:
