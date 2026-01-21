@@ -79,8 +79,9 @@ A little preview on Youtube :
 3 - Run
   `./a.exe`
 
+---------------------------------------------------------------
 
-The conf input file should be as follows:
+### The conf input file should be as follows:
 
 For enemies:
 
