@@ -71,9 +71,13 @@ A little preview on Youtube :
 
 ### On Windows
 
-Download [Allegro 4.4](https://liballeg.org/old.html) and 
+1 - Download [Allegro 4.4](https://liballeg.org/old.html)
 
-To compile : `gcc ./src/*.c -lm -lalleg44 -lmingw32 -lwinmm -I./includes`
+2 - Compile with 
+  `gcc ./src/*.c -lm -lalleg44 -lmingw32 -lwinmm -I./includes`
+
+3 - Run
+  `./a.exe`
 
 
 The conf input file should be as follows:
