@@ -75,7 +75,7 @@ void gameLoop(void)
     FARPROC setCursorPosFunc = GetProcAddress(user32, "SetCursorPos");
     FARPROC getCursorPosFunc = GetProcAddress(user32, "GetCursorPos");
 
-    PlaySound("../assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
+    PlaySound("./assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
     
     fpsString[0] = '0';
     while (!key[KEY_ESC] && !winOrLose(game)) {
@@ -116,7 +116,7 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
-    game->map = loadMap("../conf/map.conf", &game->row, &game->col);
+    game->map = loadMap("./conf/map.conf", &game->row, &game->col);
     game->sommets = createAllSommet(game->map, game->col, game->row);
     game->nbNpc = getNumNpc(game->map);
     clear_bitmap(screen);
@@ -124,11 +124,11 @@ game3d_t *createGame(void)
     game->skyX = 0;
     game->skyX2 = SCREEN_W + 10;
     game->oldMouseX = mouse_x;
-    game->sky = load_bitmap("../assets/skyNight.bmp", NULL);
-    game->texture = loadTexture("../assets/texture.bmp");
+    game->sky = load_bitmap("./assets/skyNight.bmp", NULL);
+    game->texture = loadTexture("./assets/texture.bmp");
     game->player = createPlayer();
-    game->munLogo = load_bitmap("../assets/munLogo.bmp", NULL);
-    game->pauseBanner = load_bitmap("../assets/pause.bmp", NULL);
+    game->munLogo = load_bitmap("./assets/munLogo.bmp", NULL);
+    game->pauseBanner = load_bitmap("./assets/pause.bmp", NULL);
 
     loadOpps(game);
 

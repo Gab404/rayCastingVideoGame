@@ -110,12 +110,12 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
 
 void loadOpps(game3d_t *game)
 {
-    FILE *fp = fopen("../conf/opps.conf", "r");
+    FILE *fp = fopen("./conf/opps.conf", "r");
     int nbOpps;
     int x, y;
     int index;
 
-    checkPtrNull(fp, "Exit Failure: ../conf/opps.conf opening failed\n");
+    checkPtrNull(fp, "Exit Failure: ./conf/opps.conf opening failed\n");
     fscanf(fp, "%d", &nbOpps);
     game->oppsAnim = malloc(sizeof(BITMAP ***) * (nbOpps + 1));
     game->oppsAnim[nbOpps] = NULL;

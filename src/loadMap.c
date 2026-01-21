@@ -8,7 +8,7 @@ char **loadMap(char *filepath, int *row, int *col)
     char **map;
     FILE *fp = fopen(filepath, "r");
 
-    checkPtrNull(fp, "Exit Failure: error when opening file\n");
+    checkPtrNull(fp, "Exit Failure: error when opening map file\n");
 
     fscanf(fp, "%d", row);
     fscanf(fp, "%d", col);

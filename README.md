@@ -1,8 +1,5 @@
 <div id="top"></div>
 
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -10,7 +7,7 @@
   <h3 align="center">Raycasting Video Game</h3>
 
   <p align="center">
-    Implementation of raycasting video game like Doom or Wolfenstein 3D.
+    Implementation of raycasting video game in the same style of Doom or Wolfenstein 3D.
 </div>
 
 
