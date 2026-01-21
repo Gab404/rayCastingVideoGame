@@ -21,8 +21,10 @@ void animOpps(npc_t *opps, BITMAP ****anim)
     }
 }
 
-void loadStillOpps(game3d_t *game, int i, int index)
+void loadStillOpps(game3d_t *game, int i, int typeOpps)
 {
+    int index = rand() % typeOpps;
+
     game->opps[i].life = game->opps[index].life;
     game->opps[i].dps = game->opps[index].dps;
     game->opps[i].speed = game->opps[index].speed;
@@ -82,7 +84,6 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     fscanf(fp, "%d", &dps);
     fscanf(fp, "%d", &speed);
     fscanf(fp, "%d", &points);
-
     for (int i = (game->nbNpc / nbOpps) * typeOpps; i < (game->nbNpc / nbOpps) * (typeOpps + 1); i++) {
         game->opps[i].life = life;
         game->opps[i].dps = dps;
@@ -102,7 +103,7 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
         game->opps[i].tempoAnim = clock();
         if ((i + 1 >= (game->nbNpc / nbOpps) * (typeOpps + 1)) && (typeOpps + 1 == nbOpps))
             for (int j = i + 1; j < game->nbNpc; j++) {
-                loadStillOpps(game, j, rand() % game->nbNpc);
+                loadStillOpps(game, j, typeOpps);
             }
     }
     return animOpps;
@@ -369,6 +370,7 @@ void calcSprite(game3d_t *game, int index)
     double alpha;
     int nbVec, dist;
     int projWidth, projHeight;
+    // printf("%d %d %d | %d\n", game->opps[index].typeSprite, game->opps[index].IndexAnim, game->opps[index].indexSprite, index);
     BITMAP *sprite = game->oppsAnim[game->opps[index].typeSprite][game->opps[index].IndexAnim][game->opps[index].indexSprite];
 
     game->opps[index].playerSeen = playerIsSeen(game, angleMonster, index);
