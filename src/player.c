@@ -33,35 +33,35 @@ void movePlayer(game3d_t *game)
     if (offsetSky < 1)
         offsetSky = 1;
 
-    if (game->oldMouseX < mouse_x && !game->centerCursor) {
+    if (game->oldMouseX < mouse_x) {
         game->player->angle -= game->player->sensitivity * (mouse_x - game->oldMouseX);
         game->skyX -= offsetSky;
         game->skyX2 -= offsetSky;
-    }else if (game->oldMouseX > mouse_x && !game->centerCursor) {
+    }else if (game->oldMouseX > mouse_x) {
         game->player->angle += game->player->sensitivity * (game->oldMouseX - mouse_x);
         game->skyX += offsetSky;
         game->skyX2 += offsetSky;
     }
 
-    if ((key[KEY_UP] || key[KEY_W]) && !isCollision(game->player->screenX + round(cos(game->player->angle)) * 10, game->player->screenY - round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 5) {
+    if ((key[KEY_UP] || key[KEY_W]) && !isCollision(game->player->screenX + round(cos(game->player->angle)) * 10, game->player->screenY - round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 10) {
         game->player->screenX += round(cos(game->player->angle)) * 2;
         game->player->screenY -= round(sin(game->player->angle)) * 2;
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
         moved = 1;
     }
-    if ((key[KEY_DOWN] || key[KEY_S]) && !isCollision(game->player->screenX - round(cos(game->player->angle)) * 10, game->player->screenY + round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 5) {
+    if ((key[KEY_DOWN] || key[KEY_S]) && !isCollision(game->player->screenX - round(cos(game->player->angle)) * 10, game->player->screenY + round(sin(game->player->angle)) * 10, game->map) && clock() - game->player->clockStep >= 10) {
         game->player->screenX -= round(cos(game->player->angle)) * 2;
         game->player->screenY += round(sin(game->player->angle)) * 2;
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
         moved = 1;
     }
-    if ((key[KEY_RIGHT] || key[KEY_D]) && !isCollision(game->player->screenX + round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY - round(sin(game->player->angle - (PI / 2))) * 10, game->map) && clock() - game->player->clockStep >= 5) {
+    if ((key[KEY_RIGHT] || key[KEY_D]) && !isCollision(game->player->screenX + round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY - round(sin(game->player->angle - (PI / 2))) * 10, game->map) && clock() - game->player->clockStep >= 10) {
         game->player->screenX += round(cos(game->player->angle - (PI / 2)));
         game->player->screenY -= round(sin(game->player->angle - (PI / 2)));
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
         moved = 1;
     }
-    if ((key[KEY_LEFT] || key[KEY_A]) && !isCollision(game->player->screenX - round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY + round(sin(game->player->angle - (PI / 2))) * 10, game->map) && clock() - game->player->clockStep >= 5) {
+    if ((key[KEY_LEFT] || key[KEY_A]) && !isCollision(game->player->screenX - round(cos(game->player->angle - (PI / 2))) * 10, game->player->screenY + round(sin(game->player->angle - (PI / 2))) * 10, game->map) && clock() - game->player->clockStep >= 10) {
         game->player->screenX -= round(cos(game->player->angle - (PI / 2)));
         game->player->screenY += round(sin(game->player->angle - (PI / 2)));
         game->player->guns[game->player->indexGun]->offset += game->player->guns[game->player->indexGun]->typeOffset;
@@ -78,7 +78,7 @@ player_t *createPlayer(void)
     checkPtrNull(player, "Exit Failure: malloc failed\n");
 
     player->guns = loadGuns(player->guns);
-    player->sensitivity = 0.0175; // 0.0175 radius = 1°
+    player->sensitivity = 0.0140; // 0.0175 radius = 1°
     player->angle = 0.01;
     player->life = 100;
     player->screenX = 130;
@@ -86,7 +86,7 @@ player_t *createPlayer(void)
     player->isWalked = false;
     player->indexGun = 0;
     player->indexSpriteGun = 0;
-    player->speedAnim = 7;
+    player->speedAnim = 13;
     player->currentAnim = 0;
     player->timeHeal = time(NULL);
     player->timeAttackedHeal = 0;

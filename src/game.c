@@ -38,29 +38,24 @@ int winOrLose(game3d_t *game)
 
 void replaceCursor(game3d_t *game, FARPROC setCursorPosFunc, FARPROC getCursorPosFunc)
 {
+    int x_center = SCREEN_W / 2;
+    int y_center = SCREEN_H / 2;
+
+    int dx = mouse_x - x_center;
+    int dy = mouse_y - y_center;
+
     POINT cursorPos;
 
     ((void(WINAPI *)(LPPOINT))getCursorPosFunc)(&cursorPos);
 
-    if (mouse_x >= SCREEN_W - 50) {
-        game->centerCursor = 1;
-        game->player->angle -= game->player->sensitivity * (mouse_x - game->oldMouseX);
-        ((BOOL(WINAPI *)(int, int))setCursorPosFunc)(cursorPos.x - (mouse_x - 50), cursorPos.y);
-        mouse_x = 51;
-    } else if (mouse_x <= 50)  {
-        game->centerCursor = 1;
-        game->player->angle += game->player->sensitivity * (game->oldMouseX - mouse_x);
-        ((BOOL(WINAPI *)(int, int))setCursorPosFunc)((cursorPos.x - mouse_x) + (SCREEN_W - 49), cursorPos.y);
-        mouse_x = SCREEN_W - 49;
-    }
+    int global_center_x = (cursorPos.x - mouse_x) + x_center;
+    int global_center_y = (cursorPos.y - mouse_y) + y_center;
 
-    if (mouse_y >= SCREEN_H - 50) {
-        ((BOOL(WINAPI *)(int, int))setCursorPosFunc)(cursorPos.x, cursorPos.y - (mouse_y - 50));
-        mouse_y = 51;
-    } else if (mouse_y <= 50) {
-        ((BOOL(WINAPI *)(int, int))setCursorPosFunc)(cursorPos.x, (cursorPos.y - mouse_y) + (SCREEN_H - 49));
-        mouse_y = SCREEN_H - 49;   
-    }
+    ((BOOL(WINAPI *)(int, int))setCursorPosFunc)(global_center_x, global_center_y);
+
+    mouse_x = x_center;
+    mouse_y = y_center;
+    
 }
 
 void gameLoop(void)
@@ -71,6 +66,7 @@ void gameLoop(void)
     char fpsString[5];
     time_t fpsClock = time(NULL);
 
+    // set_mouse_range(5, 5, SCREEN_W - 5, SCREEN_H - 5);
     HMODULE user32 = LoadLibrary("user32.dll");
     FARPROC setCursorPosFunc = GetProcAddress(user32, "SetCursorPos");
     FARPROC getCursorPosFunc = GetProcAddress(user32, "GetCursorPos");
@@ -78,13 +74,14 @@ void gameLoop(void)
     PlaySound("./assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
     
     fpsString[0] = '0';
-    while (!key[KEY_ESC] && !winOrLose(game)) {
+    while (!key[KEY_ESC]) { //  && !winOrLose(game)
         clear_bitmap(game->buffer);
-        replaceCursor(game, setCursorPosFunc, getCursorPosFunc);
 
         playerHeal(game);
         displaySky(game);
         movePlayer(game);
+        replaceCursor(game, setCursorPosFunc, getCursorPosFunc);
+
         raycasting(game);
         for (int i = 0; i < game->nbNpc; i++) {
             calcSprite(game, i);
@@ -101,7 +98,6 @@ void gameLoop(void)
         game->oldMouseX = mouse_x;
         game->indexSaveData = 0;
         pauseMenu(game);
-        game->centerCursor = 0;
 
         blit(game->buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
     }
@@ -116,9 +112,10 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
-    game->map = loadMap("./conf/map.conf", &game->row, &game->col);
+    game->map = loadMap("./conf/mapTest.conf", &game->row, &game->col);
     game->sommets = createAllSommet(game->map, game->col, game->row);
-    game->nbNpc = getNumNpc(game->map);
+    // game->nbNpc = getNumNpc(game->map);
+    game->nbNpc = 0;
     clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
