@@ -74,7 +74,7 @@ void gameLoop(void)
     PlaySound("./assets/background.wav", NULL, SND_ASYNC | SND_LOOP);
     
     fpsString[0] = '0';
-    while (!key[KEY_ESC]) { //  && !winOrLose(game)
+    while (!key[KEY_ESC] && !winOrLose(game)) { 
         clear_bitmap(game->buffer);
 
         playerHeal(game);
@@ -112,10 +112,9 @@ game3d_t *createGame(void)
     game3d_t *game = malloc(sizeof(game3d_t));
 
     checkPtrNull(game, "Exit Failure: malloc failed\n");
-    game->map = loadMap("./conf/mapTest.conf", &game->row, &game->col);
+    game->map = loadMap("./conf/map.conf", &game->row, &game->col);
     game->sommets = createAllSommet(game->map, game->col, game->row);
-    // game->nbNpc = getNumNpc(game->map);
-    game->nbNpc = 0;
+    game->nbNpc = getNumNpc(game->map);
     clear_bitmap(screen);
     game->buffer = create_bitmap(SCREEN_W, SCREEN_H);
     game->skyX = 0;
