@@ -118,13 +118,15 @@ void loadOpps(game3d_t *game)
 
     checkPtrNull(fp, "Exit Failure: ./conf/opps.conf opening failed\n");
     fscanf(fp, "%d", &nbOpps);
+    
+    if (nbOpps > game->nbNpc)
+        nbOpps = game->nbNpc;
     game->oppsAnim = malloc(sizeof(BITMAP ***) * (nbOpps + 1));
     game->oppsAnim[nbOpps] = NULL;
 
     game->opps = malloc(sizeof(npc_t) * game->nbNpc);
     checkPtrNull(game->opps, "Exit Failure: malloc failed");
-    if (nbOpps > game->nbNpc)
-        nbOpps = game->nbNpc;
+
     for (index = 0; index < nbOpps; index++)
         game->oppsAnim[index] = loadOneOpps(fp, game, index, game->oppsAnim[index], nbOpps);
     
@@ -374,7 +376,7 @@ void calcSprite(game3d_t *game, int index)
     BITMAP *sprite = game->oppsAnim[game->opps[index].typeSprite][game->opps[index].IndexAnim][game->opps[index].indexSprite];
 
     game->opps[index].playerSeen = playerIsSeen(game, angleMonster, index);
-    moveOpps(game, &game->opps[index], game->player, angleMonster, game->map, index);
+    // moveOpps(game, &game->opps[index], game->player, angleMonster, game->map, index);
     if (game->opps[index].x < game->player->screenX)
         angleMonster = PI + angleMonster;
     if (angleMonster < 0)
