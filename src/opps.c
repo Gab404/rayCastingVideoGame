@@ -109,12 +109,33 @@ BITMAP ***loadOneOpps(FILE *fp, game3d_t *game, int typeOpps, BITMAP ***animOpps
     return animOpps;
 }
 
+int isBadPos(game3d_t *game, int x ,int y)
+{
+    if (x < 9 && y < 5)
+        return 1;
+    for (int i = 0; i < game->nbNpc; i++) {
+        if ((game->badPosX[i] - 20) / 64 == x && (game->badPosY[i] - 20) / 64 == y)
+            return 1;
+    }
+    return 0;
+}
+
+void generateSpawnCoord(game3d_t *game, int *x, int *y, int row, int col)
+{
+    do {
+        *x = rand() % ((col - 1) - 1) + 1;
+        *y = rand() % ((row - 1) - 1) + 1;
+    } while (game->map[*y][*x] != '*' || isBadPos(game, *x, *y));
+}
+
 void loadOpps(game3d_t *game)
 {
     FILE *fp = fopen("./conf/opps.conf", "r");
     int nbOpps;
     int x, y;
     int index;
+    int row = 0;
+    int col = 0;
 
     checkPtrNull(fp, "Exit Failure: ./conf/opps.conf opening failed\n");
     fscanf(fp, "%d", &nbOpps);
@@ -150,8 +171,13 @@ void loadOpps(game3d_t *game)
         game->badPosY[i] = 0;
     }
 
+    while (game->map[row] != NULL)
+        row++;
+    while(game->map[0][col] != '\0')
+        col++;
+
     for (int i = 0; i < game->nbNpc; i++) {
-        generateSpawnCoord(game, &x, &y);
+        generateSpawnCoord(game, &x, &y, row, col);
         game->badPosX[i] = x * SIZE + 20;
         game->badPosY[i] = y * SIZE + 20;
         game->opps[i].x = x * SIZE + 20;
@@ -281,32 +307,6 @@ int collideBetweenOpps(game3d_t *game, int x, int y, int index)
     return 0;
 }
 
-int isBadPos(game3d_t *game, int x ,int y)
-{
-    if (x < 9 && y < 5)
-        return 1;
-    for (int i = 0; i < game->nbNpc; i++) {
-        if ((game->badPosX[i] - 20) / 64 == x && (game->badPosY[i] - 20) / 64 == y)
-            return 1;
-    }
-    return 0;
-}
-
-void generateSpawnCoord(game3d_t *game, int *x, int *y)
-{
-    int col = 0, row = 0;
-
-    while (game->map[row] != NULL)
-        row++;
-    while(game->map[0][col] != '\0')
-        col++;
-
-    do {
-        *x = rand() % ((col - 1) - 1) + 1;
-        *y = rand() % ((row - 1) - 1) + 1;
-    } while (game->map[*y][*x] != '*' || isBadPos(game, *x, *y));
-}
-
 int checkCoordCrash(int y, int x, int row, int col)
 {
     if (y > row || y < 0)
@@ -372,7 +372,6 @@ void calcSprite(game3d_t *game, int index)
     double alpha;
     int nbVec, dist;
     int projWidth, projHeight;
-    // printf("%d %d %d | %d\n", game->opps[index].typeSprite, game->opps[index].IndexAnim, game->opps[index].indexSprite, index);
     BITMAP *sprite = game->oppsAnim[game->opps[index].typeSprite][game->opps[index].IndexAnim][game->opps[index].indexSprite];
 
     game->opps[index].playerSeen = playerIsSeen(game, angleMonster, index);
