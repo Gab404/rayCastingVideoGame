@@ -22,7 +22,7 @@ int getNumNpc(char **map);
 
 void pauseMenu(game3d_t *game);
 
-void generateSpawnCoord(game3d_t *game, int *x, int *y);
+void generateSpawnCoord(game3d_t *game, int *x, int *y, int row, int col);
 
 void animOpps(npc_t *opps, BITMAP ****anim);
 void loadOpps(game3d_t *game);

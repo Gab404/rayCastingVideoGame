@@ -375,7 +375,7 @@ void calcSprite(game3d_t *game, int index)
     BITMAP *sprite = game->oppsAnim[game->opps[index].typeSprite][game->opps[index].IndexAnim][game->opps[index].indexSprite];
 
     game->opps[index].playerSeen = playerIsSeen(game, angleMonster, index);
-    // moveOpps(game, &game->opps[index], game->player, angleMonster, game->map, index);
+    moveOpps(game, &game->opps[index], game->player, angleMonster, game->map, index);
     if (game->opps[index].x < game->player->screenX)
         angleMonster = PI + angleMonster;
     if (angleMonster < 0)
